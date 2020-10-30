@@ -1,0 +1,37 @@
+{ "app": {
+   
+   "title": "Data Storage",
+   "version": "2.4.1",
+   "owner": "NASA/Goddard",
+   "url": "https://github.com/nasa/DS",
+
+   "description": [
+      "DS manages the creation of files containing messages read from the software",
+      "bus. Users configure tables to defined which messages are stored in each",
+      "file"
+   ],
+
+   "system": {
+      "build": true,
+      "simsat": true
+   },
+   
+   "cosmos": {
+      "target": "DS"
+   },
+   
+   "fsw": {
+      "cfe-type": "CFE_APP",
+      "obj-path-file": "/cf/ds.so",
+      "entry-symbol": "DS_AppMain",
+      "name": "DS",
+      "priority": 80,
+      "stack": 16384,
+      "load_addr": 0,
+      "exception-action": 0,
+      "app-framework": "cfs",
+      "tables": [],
+      "cmd-mid": "DS_CMD_MID"
+   }
+   
+}}

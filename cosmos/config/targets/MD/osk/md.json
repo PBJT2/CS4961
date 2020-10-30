@@ -1,0 +1,38 @@
+{ "app": {
+   
+   "title": "Memory Dwell",
+   "version": "2.3.0",
+   "owner": "NASA/Goddard",
+   "url": "https://github.com/nasa/MD",
+
+   "description": [
+      "MD monitors user-defined memory addresses accessable by the CPU. This is useful",
+      "for debugging and for late mission lifecycle changes when changes to existing",
+      "apps may not be desirable. MD can be used to create new telemetry packets rather",
+      "than changing an existing app."
+   ],
+
+   "system": {
+      "build": true,
+      "simsat": true
+   },
+   
+   "cosmos": {
+      "target": "MD"
+   },
+   
+   "fsw": {
+      "cfe-type": "CFE_APP",
+      "obj-path-file": "/cf/md.so",
+      "entry-symbol": "MD_AppMain",
+      "name": "MD",
+      "priority": 90,
+      "stack": 16384,
+      "load_addr": 0,
+      "exception-action": 0,
+      "app-framework": "cfs",
+      "tables": [],
+      "cmd-mid": "MD_CMD_MID"
+   }
+   
+}}

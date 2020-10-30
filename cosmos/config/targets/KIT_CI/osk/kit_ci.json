@@ -1,0 +1,38 @@
+{
+"app": {
+   
+   "title": "OSK Command Ingest",
+   "version": "1.1.0",
+   "owner": "OpenSatkit",
+   "url": "https://github.com/OpenSatKit/OpenSatKit",
+
+   "description": [
+      "KIT_CI receives commands from COSMOS using UDP and put the commands",
+      "on the software bus. This is very similar to the NASA/Goddard CI_LAB",
+      "app. An OSK version was written so OSK-specific feature could be added."
+   ],
+
+   "system": {
+      "build": true,
+      "simsat": true
+   },
+   
+   "cosmos": {
+      "target": "KIT_CI"
+   },
+   
+   "fsw": {
+      "cfe-type": "CFE_APP",
+      "obj-path-file": "/cf/kit_ci.so",
+      "entry-symbol": "KIT_CI_AppMain",
+      "name": "KIT_CI",
+      "priority": 20,
+      "stack": 16384,
+      "load_addr": 0,
+      "exception-action": 0,
+      "app-framework": "osk",
+      "tables": [],
+      "cmd-mid": "KIT_CI_CMD_MID"
+   }
+   
+}}
