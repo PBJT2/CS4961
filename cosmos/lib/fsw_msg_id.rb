@@ -148,6 +148,19 @@ module Fsw
       SC_CMD_MID              = "0x18A9"
       SC_1HZ_WAKEUP_MID       = "0x18AB"
       SC_HK_TLM_MID           = "0x08AA"
+
+      # Denial of Service Detect Command
+
+      DOSD_CMD_MID            = "0x1F4A" #8010
+      DOSD_SEND_HK_MID        = "0x1F4B" #8011
+      DOSD_HK_TLM_MID         = "0x1F4A"
+
+      # Denial of Service Inject Command
+
+      DOSI_CMD_MID            = "0x1F54" #8020
+      DOSI_SEND_HK_MID        = "0x1F55" #8021
+      DOSI_HK_TLM_MID         = "0x1F54"
+
   
       #########################
       ## Kit App Message IDs ##
@@ -165,6 +178,15 @@ module Fsw
       F42_CTRL_TLM_MID       = "0x09D1"
       F42_CTRL_GAINS_TLM_MID = "0x09D2"
       
+      # File Manager
+
+      FILEMGR_CMD_MID            = "0x198C"
+      FILEMGR_HK_TLM_MID         = "0x098A"
+      FILEMGR_FILE_INFO_TLM_MID  = "0x098B"
+      FILEMGR_DIR_LIST_TLM_MID   = "0x098C"
+      FILEMGR_OPEN_FILES_TLM_MID = "0x098D"
+      FILEMGR_FILESYS_TLM_MID    = "0x098E"
+
       # Heater Control
   
       HC_CMD_MID       = "0x19A0"
@@ -228,9 +250,10 @@ module Fsw
 
       # Trivial File Transfer Protocol
   
-      TFTP_CMD_MID    = "0x1900"
-      TFTP_HK_TLM_MID = "0x0900" 
-  
+      TFTP_CMD_MID          = "0x1900"
+      TFTP_HK_TLM_MID       = "0x0900" 
+      TFTP_TRANSFER_REQ_MID = "0x0901" 
+        
       ###############
       ## PiSat Kit ##
       ###############
