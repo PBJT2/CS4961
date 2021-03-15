@@ -22,7 +22,8 @@
 #include "schtbl.h"
 
 
-#define  JSON  &(SchTbl->Json)  /* Convenience macro */
+/* Convenience macro */
+#define  JSON_OBJ  &(SchTbl->Json)
 
 /*
 ** Type Definitions
@@ -71,21 +72,25 @@ void SCHTBL_Constructor(SCHTBL_Class*       ObjPtr,
    SchTbl->LoadTblFunc      = LoadTblFunc;
    SchTbl->LoadTblEntryFunc = LoadTblEntryFunc; 
 
-   JSON_Constructor(JSON, SchTbl->JsonFileBuf, SchTbl->JsonFileTokens);
+   JSON_Constructor(JSON_OBJ, SchTbl->JsonFileBuf, SchTbl->JsonFileTokens);
    
    JSON_ObjConstructor(&(SchTbl->JsonObj[SCHTBL_OBJ_SLOT]),
-                       SCHTBL_OBJ_NAME_SLOT,
+                       SCHTBL_OBJ_SLOT_NAME,
                        SlotCallback,
                        (void *)&(SchTbl->Tbl.Entry));
    
-   JSON_RegContainerCallback(JSON, &(SchTbl->JsonObj[SCHTBL_OBJ_SLOT]));
+   JSON_RegContainerCallback(JSON_OBJ,
+	                          SchTbl->JsonObj[SCHTBL_OBJ_SLOT].Name,
+	                          SchTbl->JsonObj[SCHTBL_OBJ_SLOT].Callback);
 
    JSON_ObjConstructor(&(SchTbl->JsonObj[SCHTBL_OBJ_ACTIVITY]),
-                       SCHTBL_OBJ_NAME_ACTIVITY,
+                       SCHTBL_OBJ_ACTIVITY_NAME,
                        ActivityCallback,
                        (void *)&(SchTbl->Tbl.Entry));
    
-   JSON_RegContainerCallback(JSON, &(SchTbl->JsonObj[SCHTBL_OBJ_ACTIVITY]));
+   JSON_RegContainerCallback(JSON_OBJ,
+	                          SchTbl->JsonObj[SCHTBL_OBJ_ACTIVITY].Name,
+	                          SchTbl->JsonObj[SCHTBL_OBJ_ACTIVITY].Callback);
 
 
 } /* End SCHTBL_Constructor() */
@@ -102,7 +107,7 @@ void SCHTBL_ResetStatus(void)
    SchTbl->AttrErrCnt      = 0;
    SchTbl->ObjErrCnt       = 0;
    SchTbl->ObjLoadCnt      = 0;
-   SchTbl->CurSlotIdx      = SCHTBL_UNDEF_SLOT;
+   SchTbl->CurSlotIdx      = -1;
    
    JSON_ObjArrayReset (SchTbl->JsonObj, SCHTBL_OBJ_CNT);
     
@@ -126,21 +131,21 @@ boolean SCHTBL_LoadCmd(TBLMGR_Tbl *Tbl, uint8 LoadType, const char* Filename)
    
    /* 
    ** Reset status, object modified flags, and data. A valid
-   ** MsgTblIndex is used to determine whether an entry was loaded.
+   ** MsgTblEntryId is used to determine whether an entry was loaded.
    */
    SCHTBL_ResetStatus();  
    CFE_PSP_MemSet(&(SchTbl->Tbl), 0, sizeof(SchTbl->Tbl));
-   for (entry=0; entry < SCHTBL_MAX_ENTRIES; entry++) SchTbl->Tbl.Entry[entry].MsgTblIndex = MSGTBL_MAX_ENTRIES;
+   for (entry=0; entry < SCHTBL_MAX_ENTRIES; entry++) SchTbl->Tbl.Entry[entry].MsgTblEntryId = MSGTBL_MAX_ENTRIES;
    
-   if (JSON_OpenFile(JSON, Filename)) {
+   if (JSON_OpenFile(JSON_OBJ, Filename)) {
   
       CFE_EVS_SendEvent(KIT_SCH_INIT_DEBUG_EID, KIT_SCH_INIT_EVS_TYPE, "SCHTBL_LoadCmd() - Successfully prepared file %s\n", Filename);
       //DEBUG JSON_PrintTokens(&Json,JsonFileTokens[0].size);
       //DEBUG JSON_PrintTokens(&Json,50);
     
-      SchTbl->CurSlotIdx = SCHTBL_UNDEF_SLOT;
+      SchTbl->CurSlotIdx = -1;
     
-      JSON_ProcessTokens(JSON);
+      JSON_ProcessTokens(JSON_OBJ);
 
       /* 
       ** Only process command if no attribute errors. No need to send an event
@@ -176,7 +181,7 @@ boolean SCHTBL_LoadCmd(TBLMGR_Tbl *Tbl, uint8 LoadType, const char* Filename)
                      */                     
                      for (entry=0; entry < SCHTBL_MAX_ENTRIES; entry++) {
                           
-                        if (SchTbl->Tbl.Entry[entry].MsgTblIndex < MSGTBL_MAX_ENTRIES) {
+                        if (SchTbl->Tbl.Entry[entry].MsgTblEntryId < MSGTBL_MAX_ENTRIES) {
                            
                            if (!(SchTbl->LoadTblEntryFunc)(entry, (SCHTBL_Entry*)&(SchTbl->Tbl.Entry[entry])))
                               SchTbl->LastLoadStatus = TBLMGR_STATUS_INVALID;
@@ -229,12 +234,12 @@ boolean SCHTBL_LoadCmd(TBLMGR_Tbl *Tbl, uint8 LoadType, const char* Filename)
 ** Notes:
 **  1. Function signature must match TBLMGR_DumpTblFuncPtr.
 **  2. Can assume valid table file name because this is a callback from 
-**     the app framework table manager that has verified the file. If the
-**     filename exists it will be overwritten.
-**  3. File is formatted so it can be used as a load file. However all of the
-**     entries are dumped so you will get errors on the load for unused entries
-**     because unused entries have invalid  message indices.
-**  4. DumpType is unused.
+**     the app framework table manager that has verified the file.
+**  3. DumpType is unused.
+**  4. File is formatted so it can be used as a load file. It does not follow
+**     the cFE table file format. 
+**  5. Creates a new dump file, overwriting anything that may have existed
+**     previously
 */
 
 boolean SCHTBL_DumpCmd(TBLMGR_Tbl *Tbl, uint8 DumpType, const char* Filename)
@@ -266,7 +271,7 @@ boolean SCHTBL_DumpCmd(TBLMGR_Tbl *Tbl, uint8 DumpType, const char* Filename)
       ** - Not all fields in ground table are saved in FSW so they are not
       **   populated in the dump file. However, the dump file can still
       **   be loaded.
-      ** - The MsgTblIndex field is used to indicate whether an activity
+      ** - The MsgTblEntryId field is used to indicate whether an activity
       **   has been loaded.      
       ** 
       **   "slot-array": [
@@ -276,13 +281,13 @@ boolean SCHTBL_DumpCmd(TBLMGR_Tbl *Tbl, uint8 DumpType, const char* Filename)
       **         "activity-array" : [
       **   
       **            {"activity": {
-      **            "name":   "cFE ES Housekeeping",
-      **            "descr":  "",
-      **            "index":   0,
-      **            "enabled": "true",
-      **            "period":  4,
-      **            "offset":  0,
-      **            "msg-idx": 0
+      **            "name":  "cFE ES Housekeeping",
+      **            "descr": "",
+      **            "index": 0,
+      **            "enable": true,
+      **            "frequency": 4,
+      **            "offset": 0,
+      **            "msg-id": 0
       **         }},
       **         ...
       **      ...
@@ -303,7 +308,7 @@ boolean SCHTBL_DumpCmd(TBLMGR_Tbl *Tbl, uint8 DumpType, const char* Filename)
          
          for (Activity=0; Activity < SCHTBL_ACTIVITIES_PER_SLOT; Activity++) {
             
-            EntryIdx = SCHTBL_INDEX(Slot,Activity);
+            EntryIdx = Slot * SCHTBL_ACTIVITIES_PER_SLOT + Activity;
 
             if (Activity > 0) {
                sprintf(DumpRecord,",\n");
@@ -313,12 +318,12 @@ boolean SCHTBL_DumpCmd(TBLMGR_Tbl *Tbl, uint8 DumpType, const char* Filename)
             sprintf(DumpRecord,"         {\"activity\": {\n");
             OS_write(FileHandle,DumpRecord,strlen(DumpRecord));
             
-            sprintf(DumpRecord,"         \"index\": %d,\n         \"enabled\": \"%s\",\n         \"period\": %d,\n         \"offset\": %d,\n         \"msg-idx\": %d\n      }}",
+            sprintf(DumpRecord,"         \"index\": %d,\n         \"enable\": \"%s\",\n         \"frequency\": %d,\n         \"offset\": %d,\n         \"msg-id\": %d\n      }}",
                  Activity,
                  JSON_GetBoolStr(SchTblPtr->Entry[EntryIdx].Enabled),
-                 SchTblPtr->Entry[EntryIdx].Period,
+                 SchTblPtr->Entry[EntryIdx].Frequency,
                  SchTblPtr->Entry[EntryIdx].Offset,
-                 SchTblPtr->Entry[EntryIdx].MsgTblIndex); 
+                 SchTblPtr->Entry[EntryIdx].MsgTblEntryId); 
             OS_write(FileHandle,DumpRecord,strlen(DumpRecord));
          
          } /* End activity loop */             
@@ -376,106 +381,6 @@ boolean SCHTBL_GetEntryPtr(uint16  EntryId, SCHTBL_Entry **EntryPtr)
 } /* End SCHTBL_GetEntryPtr() */
 
 
-
-/******************************************************************************
-** SCHTBL_GetEntryIndex
-**
-** Compute and load EntryIndex if the SlotIndex and ActivityIndex are valid.
-** Event message text assumes commands are being validated 
-*/
-boolean SCHTBL_GetEntryIndex(const char* EventStr, uint16 SlotIndex, 
-                             uint16 ActivityIndex, uint16* EntryIndex)
-{
-   
-   boolean RetStatus = FALSE;
-   
-   if (SlotIndex < SCHTBL_SLOTS) {
-
-      if (ActivityIndex < SCHTBL_ACTIVITIES_PER_SLOT) {
-         
-         *EntryIndex = SCHTBL_INDEX(SlotIndex, ActivityIndex);
-         RetStatus = TRUE;
-         
-      }
-      else {
-         
-         CFE_EVS_SendEvent (SCHTBL_CMD_ACTIVITY_ERR_EID, CFE_EVS_ERROR, 
-                            "%s. Invalid activity index %d greater than max %d",
-                            EventStr, ActivityIndex, (SCHTBL_ACTIVITIES_PER_SLOT-1));
-      }
-
-   } /* End if valid activity ID */
-   else {
-      
-      CFE_EVS_SendEvent (SCHTBL_CMD_SLOT_ERR_EID, CFE_EVS_ERROR, 
-                         "%s. Invalid slot index %d greater than max %d",
-                         EventStr, SlotIndex, (SCHTBL_SLOTS-1));
-
-   } /* End if invalid slot ID */
-
-   return RetStatus;
-   
-} /* End SCHTBL_GetEntryIndex() */
-
-
-/******************************************************************************
-** Function: SCHTBL_ValidEntry
-**
-** A pointer to a structure isn't passed because this function is used to
-** validate command and table parametetrs that may not be packed identically
-** to the internal structure.
-*/
-boolean SCHTBL_ValidEntry(const char* EventStr, uint16 Enabled, uint16 Period, 
-                          uint16 Offset, uint16 MsgTblIndex)
-{
-
-   boolean RetStatus = FALSE;
-
-   if (CMDMGR_ValidBoolArg(Enabled)) {
-      
-      /* 
-      ** In theory Period and Offset can have any 16-bit value so an absolute
-      ** limit isn't checked. However if an Offset is greater than the Period 
-      ** then it will never execute. The Enabled flag should be used if a user
-      ** wants to explicitly disable a slot.
-      */
-      if (Offset <= Period) {
-         
-         if ( MsgTblIndex >= 0 && MsgTblIndex < MSGTBL_MAX_ENTRIES) {
-         
-           
-           RetStatus = TRUE;
-            
-         }
-         else {
-         
-            CFE_EVS_SendEvent(SCHTBL_MSG_TBL_INDEX_ERR_EID, CFE_EVS_ERROR, 
-                              "%s. Invalid msg index %d. Valid index: 0 <= Index < %d.",
-                              EventStr, MsgTblIndex, MSGTBL_MAX_ENTRIES);
-      
-         }
-      } /* End if valid offset */
-      else {
-         
-         CFE_EVS_SendEvent(SCHTBL_OFFSET_ERR_EID, CFE_EVS_ERROR,
-                           "%s. Offset %d is greater than Period %d",
-                           EventStr, Offset, Period);    
-      
-      } /* End if invalid offset */            
-   } /* End if valid boolean config */
-   else {
-   
-      CFE_EVS_SendEvent(SCHTBL_ENABLED_ERR_EID, CFE_EVS_ERROR,
-                        "%s. Invalid Enabled value %d. Must be True(%d) or False(%d)",
-                        EventStr, Enabled, TRUE, FALSE);    
-         
-   } /* End if invalid boolean config */
-
-   return RetStatus;
-
-} /* End SCHTBL_ValidEntry() */
-
-
 /******************************************************************************
 ** Function: SlotCallback
 **
@@ -485,7 +390,7 @@ boolean SCHTBL_ValidEntry(const char* EventStr, uint16 Enabled, uint16 Period,
 **   1. This must have the same function signature as JSON_ContainerFuncPtr.
 **   2. ObjLoadCnt incremented for every message, valid or invalid.
 **   3. Assumes JSON file processed sequentially because this callback sets 
-**      the slot ID and the activity callback assumes it is processing the
+**      the slot ID and the activity callback assumes it it processing the
 **      current slot. 
 */
 static boolean SlotCallback (int TokenIdx)
@@ -493,16 +398,15 @@ static boolean SlotCallback (int TokenIdx)
 
    int     AttributeCnt = 0;
    int     JsonIntData, SlotIdx;
- 
-   SchTbl->JsonObj[SCHTBL_OBJ_SLOT].Modified = FALSE;
-   
+   boolean RetStatus = FALSE;      
+
    CFE_EVS_SendEvent(KIT_SCH_INIT_DEBUG_EID, KIT_SCH_INIT_EVS_TYPE,
                      "\nSCHTBL.SlotCallback: ObjLoadCnt %d, AttrErrCnt %d, TokenIdx %d\n",
                      SchTbl->ObjLoadCnt, SchTbl->AttrErrCnt, TokenIdx);
              
    CFE_EVS_SendEvent(KIT_SCH_INIT_DEBUG_EID, KIT_SCH_INIT_EVS_TYPE,
                      "\nSCHTBL.SlotCallback: ContainerSize %d\n", 
-                     JSON_GetContainerSize(JSON, TokenIdx));
+                     JSON_GetContainerSize(JSON_OBJ, TokenIdx));
 
    /* 
    ** Slot
@@ -511,27 +415,23 @@ static boolean SlotCallback (int TokenIdx)
    **   []  : Array of activities.  
    */
    
-   if (JSON_GetValShortInt(JSON, TokenIdx, "index", &JsonIntData)) { 
+   if (JSON_GetValShortInt(JSON_OBJ, TokenIdx, "index", &JsonIntData)) { 
       AttributeCnt++; 
       SlotIdx = JsonIntData; 
    }
       
    SchTbl->ObjLoadCnt++;
    
+   /* TODO - Add sanity check to verify array object exists within the slot container */
    if (AttributeCnt == 1) {
    
       if (SlotIdx >= 0 && SlotIdx < SCHTBL_SLOTS) {
          
          SchTbl->CurSlotIdx = SlotIdx;
-         SchTbl->JsonObj[SCHTBL_OBJ_SLOT].Modified = TRUE;
+         RetStatus = TRUE;
       
       } /* End if Id within limits */
       else {
-         
-         CFE_EVS_SendEvent (SCHTBL_LOAD_ATTR_ERR_EID, CFE_EVS_ERROR, 
-                            "Scheduler Table error. Invalid slot index %d greater than max %d",
-                            SlotIdx, (SCHTBL_SLOTS-1));
-         SchTbl->CurSlotIdx = SCHTBL_UNDEF_SLOT;
          SchTbl->ObjErrCnt++;
       }
      
@@ -541,12 +441,12 @@ static boolean SlotCallback (int TokenIdx)
    else {
 	   
       SchTbl->AttrErrCnt++;     
-      CFE_EVS_SendEvent(SCHTBL_LOAD_ATTR_ERR_EID, CFE_EVS_ERROR, "Scheduler Table error. Invalid number of slot attributes %d. Should be 1.",
+      CFE_EVS_SendEvent(SCHTBL_LOAD_ATTR_ERR_EID, CFE_EVS_ERROR, "Invalid number of slot attributes %d. Should be 1.",
                         AttributeCnt);
    
    } /* End if invalid AttributeCnt */
       
-   return SchTbl->JsonObj[SCHTBL_OBJ_SLOT].Modified;
+   return RetStatus;
 
 } /* SlotCallback() */
 
@@ -559,107 +459,104 @@ static boolean SlotCallback (int TokenIdx)
 ** Notes:
 **   1. This must have the same function signature as JSON_ContainerFuncPtr.
 **   2. ObjLoadCnt incremented for every message, valid or invalid.
-**   3. Validation functions send events messages
 */
 static boolean ActivityCallback (int TokenIdx)
 {
 
    int    AttributeCnt = 0;
-   int    JsonIntData, ActivityIdx;
+   int    JsonIntData, ActivityIdx, EntryIdx;
    char   DataStr[128];  /* Need room for 'true' or 'false'. Spare in case erroneous entry */
-   char   EventStr[128];
+   boolean RetStatus = FALSE;      
    SCHTBL_Entry SchEntry;
 
-   SchTbl->JsonObj[SCHTBL_OBJ_ACTIVITY].Modified = FALSE;
-   
    CFE_EVS_SendEvent(KIT_SCH_INIT_DEBUG_EID, KIT_SCH_INIT_EVS_TYPE,
                      "\nSCHTBL.ActivityCallback: ObjLoadCnt %d, AttrErrCnt %d, TokenIdx %d, CurSlotIdx %d\n",
                      SchTbl->ObjLoadCnt, SchTbl->AttrErrCnt, TokenIdx, SchTbl->CurSlotIdx);
    CFE_EVS_SendEvent(KIT_SCH_INIT_DEBUG_EID, KIT_SCH_INIT_EVS_TYPE,
                      "\nSCHTBL.ActivityCallback: ContainerSize %d\n",
-                     JSON_GetContainerSize(JSON, TokenIdx));
+                     JSON_GetContainerSize(JSON_OBJ, TokenIdx));
    
-   /*
-   ** If current slot is invalid an event message shoudl have been sent and the
-   ** activity array can be ignored.   
+   memset((void*)&SchEntry,0,sizeof(SCHTBL_Entry));
+   
+   /* 
+   ** Activity entry 
+   **
+   ** "activity": {
+   **    "name":  "Time Housekeeping",
+   **    "descr": "",
+   **    "index": 0,
+   **    "enable": true,
+   **    "frequency": 4,
+   **    "offset": 0,
+   **    "msg-id": 4,
+   ** }
    */
-   if (SchTbl->CurSlotIdx != SCHTBL_UNDEF_SLOT) {
+   if (JSON_GetValStr(JSON_OBJ, TokenIdx, "name", DataStr)) { CFE_EVS_SendEvent(KIT_SCH_INIT_DEBUG_EID, KIT_SCH_INIT_EVS_TYPE,"SCHTBL.ActivityCallback: %s\n",DataStr); }   
+   if (JSON_GetValShortInt(JSON_OBJ, TokenIdx, "index",      &JsonIntData)) { AttributeCnt++; ActivityIdx            = JsonIntData; }
+   if (JSON_GetValShortInt(JSON_OBJ, TokenIdx, "frequency",  &JsonIntData)) { AttributeCnt++; SchEntry.Frequency     = (uint16) JsonIntData; }
+   if (JSON_GetValShortInt(JSON_OBJ, TokenIdx, "offset",     &JsonIntData)) { AttributeCnt++; SchEntry.Offset        = (uint16) JsonIntData; }
+   if (JSON_GetValShortInt(JSON_OBJ, TokenIdx, "msg-id",     &JsonIntData)) { AttributeCnt++; SchEntry.MsgTblEntryId = (uint16) JsonIntData; }
+   if (JSON_GetValStr(JSON_OBJ,      TokenIdx, "enable", DataStr)) {
       
-      memset((void*)&SchEntry,0,sizeof(SCHTBL_Entry));
+      AttributeCnt++; 
       
-      /* 
-      ** Activity entry 
-      **
-      ** "activity": {
-      **    "name":    "Time Housekeeping",
-      **    "descr":   "",
-      **    "index":   0,
-      **    "enabled": "true",
-      **    "period":  4,
-      **    "offset":  0,
-      **    "msg-idx": 4,
-      ** }
+      /*
+      ** n != to exact length because that would only verify prefix is equal 
       */
-      if (JSON_GetValStr(JSON, TokenIdx, "name", DataStr)) { CFE_EVS_SendEvent(KIT_SCH_INIT_DEBUG_EID, KIT_SCH_INIT_EVS_TYPE,"SCHTBL.ActivityCallback: %s\n",DataStr); }   
-      if (JSON_GetValShortInt(JSON, TokenIdx, "index",   &JsonIntData)) { AttributeCnt++; ActivityIdx          = JsonIntData; }
-      if (JSON_GetValShortInt(JSON, TokenIdx, "period",  &JsonIntData)) { AttributeCnt++; SchEntry.Period      = (uint16) JsonIntData; }
-      if (JSON_GetValShortInt(JSON, TokenIdx, "offset",  &JsonIntData)) { AttributeCnt++; SchEntry.Offset      = (uint16) JsonIntData; }
-      if (JSON_GetValShortInt(JSON, TokenIdx, "msg-idx", &JsonIntData)) { AttributeCnt++; SchEntry.MsgTblIndex = (uint16) JsonIntData; }
-      if (JSON_GetValStr(JSON,      TokenIdx, "enabled", DataStr)) {
-         
-         AttributeCnt++; 
-         
-         /*
-         ** n != to exact length because that would only verify prefix is equal 
-         */
-         if (strncmp(DataStr,"true",6) == 0)
-            SchEntry.Enabled = TRUE;
-         else if (strncmp(DataStr,"false",6) == 0)
-            SchEntry.Enabled = FALSE;
-         
-      } /* End if DataStr */
+      if (strncmp(DataStr,"true",6) == 0)
+         SchEntry.Enabled = TRUE;
+      else if (strncmp(DataStr,"false",6) == 0)
+         SchEntry.Enabled = FALSE;
       
-      SchTbl->ObjLoadCnt++;
-      
-      if (AttributeCnt == 5) {
-      
-         uint16 Index;
+   } /* End if DataStr */
+   
+   SchTbl->ObjLoadCnt++;
+   
+   if (AttributeCnt == 5) {
+   
+      if ( ActivityIdx >= 0 && ActivityIdx < SCHTBL_ACTIVITIES_PER_SLOT) {
          
-         if (SCHTBL_GetEntryIndex("Scheduler Table JSON error",
-             SchTbl->CurSlotIdx, ActivityIdx, &Index)) {
+         if ( SchEntry.MsgTblEntryId >= 0 && SchEntry.MsgTblEntryId < MSGTBL_MAX_ENTRIES) {
+            
+            /* CurSlotIdx should never get set beyond max, but check ensure array access is valid */
+            if (SchTbl->CurSlotIdx >= 0 && SchTbl->CurSlotIdx < SCHTBL_SLOTS) {
+         
+               EntryIdx = SchTbl->CurSlotIdx * SCHTBL_ACTIVITIES_PER_SLOT + ActivityIdx;
+               SchTbl->Tbl.Entry[EntryIdx] = SchEntry;
+               RetStatus = TRUE;
+               
+            } /* End if CurSlotId within limits */
 
-            /* Prepare an error string in case it's needed */
-            sprintf(EventStr,"JSON parse error for scheduler table slot %d, activity %d",
-                    SchTbl->CurSlotIdx, ActivityIdx);
+            CFE_EVS_SendEvent(KIT_SCH_INIT_DEBUG_EID, KIT_SCH_INIT_EVS_TYPE,
+                              "SCHTBL.ActivityCallback (activty idx, freq, offset, msg idx, enabled): %d, %d, %d, %d, %d\n",
+                              ActivityIdx, SchEntry.Frequency, SchEntry.Offset, SchEntry.MsgTblEntryId, SchEntry.Enabled);
+      
+         } /* End if valid message entry id */
+         else {
             
-            if (SCHTBL_ValidEntry(EventStr, SchEntry.Enabled, SchEntry.Period,
-                             SchEntry.Offset,SchEntry.MsgTblIndex)) {
-            
-               SchTbl->Tbl.Entry[Index] = SchEntry;
-               SchTbl->JsonObj[SCHTBL_OBJ_ACTIVITY].Modified = TRUE;
-            
-               CFE_EVS_SendEvent(KIT_SCH_INIT_DEBUG_EID, KIT_SCH_INIT_EVS_TYPE,
-                                 "SCHTBL.ActivityCallback (activty idx, period, offset, msg idx, enabled): %d, %d, %d, %d, %d\n",
-                                 ActivityIdx, SchEntry.Period, SchEntry.Offset, SchEntry.MsgTblIndex, SchEntry.Enabled);
-            }
-         }
-            
-      } /* End if valid AttributeCnt */
+            CFE_EVS_SendEvent(SCHTBL_LOAD_PARSE_ERR_EID, CFE_EVS_ERROR, "Invalid activity msg id %d. Must be between 0 and %d.",
+                              SchEntry.MsgTblEntryId, MSGTBL_MAX_ENTRIES);
+         
+         } /* End if valid message entry id  */
+      } /* End if valid activity index */
       else {
-         
-         SchTbl->AttrErrCnt++;     
-         CFE_EVS_SendEvent(SCHTBL_LOAD_PARSE_ERR_EID, CFE_EVS_ERROR, "Invalid number of activity attributes %d. Should be 5.",
-                           AttributeCnt);
-      
-      } /* End if invalid AttributeCnt */
+         CFE_EVS_SendEvent(SCHTBL_LOAD_ATTR_ERR_EID, CFE_EVS_ERROR, "Invalid activity index %d. Must be between 0 and %d.",
+                           ActivityIdx, SCHTBL_ACTIVITIES_PER_SLOT);
+      } /* End if invalid activity index  */
+   
+   } /* End if valid AttributeCnt */
+   else {
+	   
+      SchTbl->AttrErrCnt++;     
+      CFE_EVS_SendEvent(SCHTBL_LOAD_PARSE_ERR_EID, CFE_EVS_ERROR, "Invalid number of activity attributes %d. Should be 5.",
+                        AttributeCnt);
+   
+   } /* End if invalid AttributeCnt */
 
-      /* Incremented if CurSlotIdx invalid which technically is not this object's error, but something wrong with JSON file */
-      if (!SchTbl->JsonObj[SCHTBL_OBJ_ACTIVITY].Modified) SchTbl->ObjErrCnt++;
+   /* Incremented if CurSlotIdx invalid which technically is not this object's error, but something wrong with JSON file */
+   if (!RetStatus) SchTbl->ObjErrCnt++;
    
-   } /* End if valid SchTbl->CurSlotIdx */
-   
-   return SchTbl->JsonObj[SCHTBL_OBJ_ACTIVITY].Modified;
+   return RetStatus;
 
 } /* ActivityCallback() */
-
 

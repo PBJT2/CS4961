@@ -1,20 +1,15 @@
 {
 "app": {
 
-   "title": "CCSDS File Delivery Protocol",
+   "title": "CFDP App",
    "version": "2.2.1",
-   "owner": "NASA/Goddard",
-   "url": "https://github.com/nasa/CF",
 
    "description": [
-      "CF implements the CCSDS File Delivery Protocol (CFDP) standard",
-      "https://public.ccsds.org/Pubs/727x0b5.pdf."
-   ],
 
-   "system": {
-      "build": true,
-      "simsat": false
-   },
+      "CCSDS File Delivery Protocol app",
+      ""
+      ],
+
    
    "cosmos": {
       "target": "CF"

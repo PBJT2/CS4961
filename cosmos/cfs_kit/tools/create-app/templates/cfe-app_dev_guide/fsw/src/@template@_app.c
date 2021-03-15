@@ -534,8 +534,7 @@ void @TEMPLATE@_RoutineProcessingCmd(CFE_SB_MsgPtr_t msg)
         @TEMPLATE@_AppData.WorkingCriticalData.DataPtFive++;
         
         CFE_EVS_SendEvent(@TEMPLATE@_PROCESS_INF_EID,CFE_EVS_INFORMATION, "@TEMPLATE@: Routine Processing Command");
-        
-        @TEMPLATE@_AppData.CmdCounter++;
+
     }
 
     return;

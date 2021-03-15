@@ -148,6 +148,13 @@ module Fsw
       SC_CMD_MID              = "0x18A9"
       SC_1HZ_WAKEUP_MID       = "0x18AB"
       SC_HK_TLM_MID           = "0x08AA"
+
+      #Single Bit Error Inject Command
+      
+      SBEI_CMD_MID     = "0x1528" #5416
+      SBEI_SEND_HK_MID = "0x1529" #5417
+      SBEI_HK_TLM_MID  = "0x1528" 
+
   
       #########################
       ## Kit App Message IDs ##
@@ -155,22 +162,22 @@ module Fsw
  
       # Benchmark
   
-      BM_CMD_MID     = "0x19F0"
+      BM_CMD_MID        = "0x19F0"
       BM_HK_TLM_MID	= "0x09F0"
 
       # F42 - 42 Simulator FSW
   
-      F42_CMD_MID            = "0x19D0"
-      F42_HK_TLM_MID         = "0x09D0"
-      F42_CTRL_TLM_MID       = "0x09D1"
-      F42_CTRL_GAINS_TLM_MID = "0x09D2"
-      
+      F42_CMD_MID      = "0x19D0"
+      F42_HK_TLM_MID   = "0x09D0"
+      F42_CONTROL_MID  = "0x09D1"
+      F42_SENSOR_MID   = "0x09E0"
+      F42_ACTUATOR_MID = "0x09E1"
+  
       # Heater Control
   
-      HC_CMD_MID       = "0x19A0"
-      HC_HK_TLM_MID    = "0x09A0"
-      HC_THERM_TLM_MID = "0x09A1"
-      
+      HC_CMD_MID    = "0x19A5"
+      HC_HK_TLM_MID = "0x0A40"
+
       # Heater Simulation
   
       HSIM_CMD_MID      = "0x19B1"
@@ -179,52 +186,49 @@ module Fsw
   
       # I42 - 42 Simulator Interface
   
-      I42_CMD_MID    = "0x19E0"
-      I42_HK_TLM_MID = "0x09E0"
-      I42_SENSOR_DATA_MID       = "0x09E1"
-      I42_ACTUATOR_CMD_DATA_MID = "0x09E2"
+      I42_CMD_MID      = "0x19D2"
+      I42_HK_TLM_MID   = "0x09D2"
 
       # ISIM - Simple Sat (SimSat) Instrument Simulator (Isim)
   
-      ISIM_CMD_MID      = "0x19C0"
-      ISIM_EXECUTE_MID  = "0x19C1"
-      ISIM_HK_TLM_MID   = "0x09C0"
+      ISIM_CMD_MID      = "0x1802"
+      ISIM_HK_TLM_MID   = "0x0882"
       
       # Kit Command Ingest
   
-      KIT_CI_CMD_MID    = "0x1F00"
-      KIT_CI_HK_TLM_MID = "0x0F00"
+      KIT_CI_CMD_MID    = "0x1884"
+      KIT_CI_HK_TLM_MID = "0x0884"
 
       # Kit Scheduler
   
-      KIT_SCH_CMD_MID           = "0x1F10"
-      KIT_SCH_HK_TLM_MID        = "0x0F10"
-      KIT_SCH_DIAG_TLM_MID      = "0x0F11"
-      KIT_SCH_TBL_ENTRY_TLM_MID = "0x0F12"
-      
+      KIT_SCH_CMD_MID    = "0x1895"
+      KIT_SCH_HK_TLM_MID = "0x0899"
+  
       # Kit Telemetry Output
 
-      KIT_TO_CMD_MID           = "0x1F20"
-      KIT_TO_HK_TLM_MID        = "0x0F20"
-      KIT_TO_PKT_TBL_TLM_MID   = "0x0F21"
-      KIT_TO_DATA_TYPE_TLM_MID = "0x0F22"
+      KIT_TO_CMD_MID           = "0x1880"
+      KIT_TO_HK_TLM_MID        = "0x0880"
+      KIT_TO_DATA_TYPE_TLM_MID = "0x0881"
 
       # OpenSatKit C Demo App 
   
-      OSK_C_DEMO_CMD_MID    = "0x1F30"
-      OSK_C_DEMO_HK_TLM_MID = "0x0F30"
-      OSK_C_DEMO_FR_TLM_MID = "0x0F31"
+      OSK_C_DEMO_CMD_MID    = "0x1866"
+      OSK_C_DEMO_HK_TLM_MID = "0x0F03"
+      OSK_C_DEMO_FR_TLM_MID = "0x0F04"
 
       # OpenSatKit C++ Demo App 
   
-      OSK_CPP_DEMO_CMD_MID    = "0x1F40"
-      OSK_CPP_DEMO_HK_TLM_MID = "0x0F40"
+      OSK_CPP_DEMO_CMD_MID    = "0x1867"
+      OSK_CPP_DEMO_HK_TLM_MID = "0x0F05"
 
-      # Create App and reserved for testing 
-  
-      OSK_TEST_CMD_MID      = "0x1FF0"
-      OSK_TEST_SEND_HK_MID  = "0x1FF1"
-      OSK_TEST_HK_TLM_MID   = "0x0FF0"
+      # OpenSatKit Create App tool
+      #
+      # - Use cFE's Sample App MIDs as defaults
+      #   for the Create App tool  
+      #
+
+      OSK_GENAPP_CMD_MID    = "0x1883"
+      OSK_GENAPP_HK_TLM_MID = "0x0883"
 
       # Trivial File Transfer Protocol
   
@@ -239,12 +243,12 @@ module Fsw
   
       HB_CMD_MID    = "0x1882"
       HB_HK_TLM_MID = "0x0885"
-  
+
       #####################
       ## Utility Methods ##
       #####################
 
-      def self.get_val(msg_id)
+      def self.get_msg_val(msg_id)
          begin
             raise ArgumentError, 'Message id argument is not a string' unless msg_id.is_a? String
             if defined? (msg_id) 
@@ -256,7 +260,7 @@ module Fsw
     
          return @msg_val
     
-      end # get_val()
+      end # get_msg_val()
     
    end # module MsgeId
 end # module Fsw

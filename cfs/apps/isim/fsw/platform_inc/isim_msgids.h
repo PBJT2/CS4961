@@ -20,14 +20,13 @@
 ** Command Message IDs
 */
 
-#define  ISIM_CMD_MID        0x19C0
-#define  ISIM_EXECUTE_MID    0x19C1
-#define  ISIM_SEND_HK_MID    0x19C2
+#define  ISIM_CMD_MID        0x1802
+#define  ISIM_SEND_HK_MID    0x1885  /* Same as KIT_CI to simplify integration */
 
 /*
 ** Telemetry Message IDs
 */
 
-#define  ISIM_TLM_HK_MID     0x09C0
+#define  ISIM_TLM_HK_MID     0x0882
 
 #endif /* _isim_msgids_ */

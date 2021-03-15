@@ -960,6 +960,8 @@
 */
 #define MM_PSP_SET_ERR_EID                     59
 
+#define MM_SBEI_EID                            60
+
 #endif /* _mm_events_ */
 
 /************************/

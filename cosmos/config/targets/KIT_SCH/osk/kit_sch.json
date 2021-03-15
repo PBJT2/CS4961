@@ -1,23 +1,5 @@
 { "app": {
    
-   "title": "OSK Scheduler",
-   "version": "2.0.0",
-   "owner": "OpenSatkit",
-   "url": "https://github.com/OpenSatKit/OpenSatKit",
-
-   "description": [
-      "KIT_SCH provides a method of generating software bus messages at pre-determined",
-      "timing intervals allowing the system to operate in a Time Division Multiplexed",
-      "(TDM) manner with deterministic behavior. This is very similar to the",
-      "NASA/Goddard SCH app except that it uses JSON text files as oppposed to",
-      "SCH's binary tables."
-   ],
-
-   "system": {
-      "build": true,
-      "simsat": true
-   },
-   
    "cosmos": {
       "target": "KIT_SCH"
    },
@@ -36,12 +18,12 @@
          { 
                 "name": "Message Table",
                   "id": 0,
-            "filename": "osk_sch_msg_tbl.json"
+            "filename": "kit_sch_msg_tbl.json"
          },
          { 
                 "name": "Scheduler Table",
                   "id": 1,
-            "filename": "osk_sch_sch_tbl.json"
+            "filename": "kit_sch_sch_tbl.json"
          }
       ],
       "cmd-mid": "KIT_SCH_CMD_MID"

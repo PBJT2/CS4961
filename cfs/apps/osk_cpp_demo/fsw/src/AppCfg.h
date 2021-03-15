@@ -32,14 +32,9 @@
 
 struct AppCfg {
    
-   /*
-   ** Version
-   **
-   ** 1.0.0 - Initial release
-   ** 1.1.0 - Fixed cFE default table load issues
-   */   
+   // Version
    static const int MAJOR_VER  = 1; 
-   static const int MINOR_VER  = 1;
+   static const int MINOR_VER  = 1;   /* Fixed cFE default table load issues */
    static const int LOCAL_REV  = OSK_CPP_DEMO_APP_LOCAL_REV;
 
    // Commands

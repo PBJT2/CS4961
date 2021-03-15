@@ -1,6 +1,5 @@
 /*
-** Purpose: Define platform configurations for the OpenSat Kit Telemetry Output
-**          application
+** Purpose: Define platform configurations for the OpenSat Kit Telemetry Output application
 **
 ** Notes:
 **   None
@@ -38,6 +37,13 @@
 
 #define  KIT_TO_TLM_PORT      1235
 
-#define  KIT_TO_DEF_PKTTBL_FILE_NAME "/cf/osk_to_pkt_tbl.json"
+#define  KIT_TO_DEF_PKTTBL_FILE_NAME "/cf/kit_to_pkt_tbl.json"
+
+
+/******************************************************************************
+** Uplink object Macros
+*/
+
+#define  UPLINK_RECV_BUFF_LEN  512
 
 #endif /* _kit_to_platform_cfg_ */

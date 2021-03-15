@@ -1,8 +1,8 @@
 /************************************************************************
  ** File:
- **   $Id: cs_msgdefs.h 1.4.1.1 2017/03/31 12:07:25EDT sstrege Exp  $
+ **   $Id: cs_msgdefs.h 1.5.1.1 2015/03/03 11:58:12EST sstrege Exp  $
  **
- **   Copyright (c) 2007-2014 United States Government as represented by the 
+ **   Copyright © 2007-2014 United States Government as represented by the 
  **   Administrator of the National Aeronautics and Space Administration. 
  **   All Other Rights Reserved.  
  **
@@ -21,6 +21,24 @@
  **   CFS CS Heritage Analysis Document
  **   CFS CS CDR Package
  **
+ ** Notes:
+ **
+ **   $Log: cs_msgdefs.h  $
+ **   Revision 1.5.1.1 2015/03/03 11:58:12EST sstrege 
+ **   Added copyright information
+ **   Revision 1.5 2015/02/25 16:38:16EST lwalling 
+ **   Document issue when recomputing the checksum for the CS Tables Definition Table when one entry is for the Definition table itself
+ **   Revision 1.4 2012/07/13 16:20:46EDT rmcgraw 
+ **   DCR18901:1 Fixed Users Guide errors
+ **   Revision 1.3 2010/04/14 15:41:08EDT jmdagost 
+ **   Added CS_NUM_TABLES definition.
+ **   Revision 1.2 2010/03/09 17:01:29EST jmdagost 
+ **   Moved command code definitions from cs_msg.h
+ **   Revision 1.1 2008/07/23 10:27:06EDT njyanchik 
+ **   Initial revision
+ **   Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cs/fsw/src/project.pj
+
+ ** 
  *************************************************************************/
 
 #ifndef _cs_msgdefs_
@@ -108,10 +126,9 @@
 /** \cscmd Start One shot calculation
  **  
  **  \par Description
- **         Computes a checksum on the command specified address
- **         and size of memory at the command specified rate.
- **         This command spawns a child task to complete the
- **         checksum.
+ **         Computes a checksum on the given address and size of
+ **         memory specified in the command. This command spawns
+ **         a child task to complete the checksum.
  **
  **  \cscmdmnemonic \CS_ONESHOT
  **
@@ -132,10 +149,8 @@
  **       This command may fail for the following reason(s):
  **       - Command packet length not as expected
  **       - The address and size cannot be validated
- **       - A child task (recompute baseline or one shot ) is 
- **         already running, precluding starting another. Only one child
- **         task is allowed to run at any given time.
- **       - The child task failed to be created
+ **       - A child task could already be in use, precluding starting another
+ **       - A child task failed to be created
  **       
  **  \par Evidence of failure may be found in the following telemetry: 
  **       - \b \c \CS_CMDEC - command error counter will increment
@@ -147,13 +162,7 @@
  **  \par Criticality
  **       None
  **
- **  \sa #CS_CANCEL_ONESHOT_CC,
- **      #CS_RECOMPUTE_BASELINE_CFECORE_CC,
- **      #CS_RECOMPUTE_BASELINE_OS_CC,
- **      #CS_RECOMPUTE_BASELINE_EEPROM_CC,
- **      #CS_RECOMPUTE_BASELINE_MEMORY_CC,
- **      #CS_RECOMPUTE_BASELINE_TABLE_CC,
- **      #CS_RECOMPUTE_BASELINE_APP_CC
+ **  \sa #CS_CANCEL_ONESHOT_CC
  */
 #define CS_ONESHOT_CC                           2
 
@@ -380,10 +389,8 @@
  **  \par Error Conditions
  **       This command may fail for the following reason(s):
  **       - Command packet length not as expected
- **       - A child task (recompute baseline or one shot ) is 
- **         already running, precluding starting another. Only one child
- **         task is allowed to run at any given time.
- **       - The child task failed to be created by Executive Services (ES)
+ **       - There is already a CS child task in use
+ **       - The child task could not be created by ES
  ** 
  **  \par Evidence of failure may be found in the following telemetry: 
  **       - \b \c \CS_CMDEC - command error counter will increment
@@ -394,12 +401,6 @@
  **  \par Criticality
  **       None
  **
- **  \sa #CS_ONESHOT_CC,
- **      #CS_RECOMPUTE_BASELINE_OS_CC,
- **      #CS_RECOMPUTE_BASELINE_EEPROM_CC,
- **      #CS_RECOMPUTE_BASELINE_MEMORY_CC,
- **      #CS_RECOMPUTE_BASELINE_TABLE_CC,
- **      #CS_RECOMPUTE_BASELINE_APP_CC
  */
 #define CS_RECOMPUTE_BASELINE_CFECORE_CC        9
 
@@ -524,10 +525,8 @@
  **  \par Error Conditions
  **       This command may fail for the following reason(s):
  **       - Command packet length not as expected
- **       - A child task (recompute baseline or one shot ) is 
- **         already running, precluding starting another. Only one child
- **         task is allowed to run at any given time.
- **       - The child task failed to be created by Executive Services (ES)
+ **       - There is already a CS child task in use
+ **       - The child task could not be created by ES
  ** 
  **  \par Evidence of failure may be found in the following telemetry: 
  **       - \b \c \CS_CMDEC - command error counter will increment
@@ -537,12 +536,7 @@
  **
  **  \par Criticality
  **       None
- **  \sa #CS_ONESHOT_CC,
- **      #CS_RECOMPUTE_BASELINE_CFECORE_CC,
- **      #CS_RECOMPUTE_BASELINE_EEPROM_CC,
- **      #CS_RECOMPUTE_BASELINE_MEMORY_CC,
- **      #CS_RECOMPUTE_BASELINE_TABLE_CC,
- **      #CS_RECOMPUTE_BASELINE_APP_CC
+ **
  */
 #define CS_RECOMPUTE_BASELINE_OS_CC             13
 
@@ -674,26 +668,17 @@
  **       This command may fail for the following reason(s):
  **       - Command packet length not as expected
  **       - The command specified Entry ID is invalid
- **       - A child task (recompute baseline or one shot ) is 
- **         already running, precluding starting another. Only one child
- **         task is allowed to run at any given time.
- **       - The child task failed to be created by Executive Services (ES)
+ **       - The creation of the child task failed
  ** 
  **  \par Evidence of failure may be found in the following telemetry: 
  **       - \b \c \CS_CMDEC - command error counter will increment
  **       - Error specific event message #CS_LEN_ERR_EID
  **       - Error specific event message #CS_RECOMPUTE_INVALID_ENTRY_EEPROM_ERR_EID
  **       - Error specific event message #CS_RECOMPUTE_EEPROM_CREATE_CHDTASK_ERR_EID
- **       - Error specific event message #CS_RECOMPUTE_EEPROM_CHDTASK_ERR_EID
  **
  **  \par Criticality
  **       None
- **  \sa #CS_ONESHOT_CC,
- **      #CS_RECOMPUTE_BASELINE_CFECORE_CC,
- **      #CS_RECOMPUTE_BASELINE_OS_CC,
- **      #CS_RECOMPUTE_BASELINE_MEMORY_CC,
- **      #CS_RECOMPUTE_BASELINE_TABLE_CC,
- **      #CS_RECOMPUTE_BASELINE_APP_CC
+ **
  */
 #define CS_RECOMPUTE_BASELINE_EEPROM_CC         17
 
@@ -926,26 +911,17 @@
  **       This command may fail for the following reason(s):
  **       - Command packet length not as expected
  **       - The command specified Entry ID is invalid
- **       - A child task (recompute baseline or one shot ) is 
- **         already running, precluding starting another. Only one child
- **         task is allowed to run at any given time.
- **       - The child task failed to be created by Executive Services (ES)
+ **       - The creation of the child task failed
  ** 
  **  \par Evidence of failure may be found in the following telemetry: 
  **       - \b \c \CS_CMDEC - command error counter will increment
  **       - Error specific event message #CS_LEN_ERR_EID
  **       - Error specific event message #CS_RECOMPUTE_INVALID_ENTRY_MEMORY_ERR_EID
  **       - Error specific event message #CS_RECOMPUTE_MEMORY_CREATE_CHDTASK_ERR_EID
- **       - Error specific event message #CS_RECOMPUTE_MEMORY_CHDTASK_ERR_EID
  **
  **  \par Criticality
  **       None
- **  \sa #CS_ONESHOT_CC,
- **      #CS_RECOMPUTE_BASELINE_CFECORE_CC,
- **      #CS_RECOMPUTE_BASELINE_OS_CC,
- **      #CS_RECOMPUTE_BASELINE_EEPROM_CC,
- **      #CS_RECOMPUTE_BASELINE_TABLE_CC,
- **      #CS_RECOMPUTE_BASELINE_APP_CC
+ **
  */
 #define CS_RECOMPUTE_BASELINE_MEMORY_CC         24
 
@@ -1187,26 +1163,17 @@
  **       This command may fail for the following reason(s):
  **       - Command packet length not as expected
  **       - The command specified table name is invalid
- **       - A child task (recompute baseline or one shot ) is 
- **         already running, precluding starting another. Only one child
- **         task is allowed to run at any given time.
- **       - The child task failed to be created by Executive Services (ES)
+ **       - The creation of the child task failed
  ** 
  **  \par Evidence of failure may be found in the following telemetry: 
  **       - \b \c \CS_CMDEC - command error counter will increment
  **       - Error specific event message #CS_LEN_ERR_EID
  **       - Error specific event message #CS_RECOMPUTE_UNKNOWN_NAME_TABLES_ERR_EID
  **       - Error specific event message #CS_RECOMPUTE_TABLES_CREATE_CHDTASK_ERR_EID
- **       - Error specific event message #CS_RECOMPUTE_TABLES_CHDTASK_ERR_EID
  **
  **  \par Criticality
  **       None
- **  \sa #CS_ONESHOT_CC,
- **      #CS_RECOMPUTE_BASELINE_CFECORE_CC,
- **      #CS_RECOMPUTE_BASELINE_OS_CC,
- **      #CS_RECOMPUTE_BASELINE_EEPROM_CC,
- **      #CS_RECOMPUTE_BASELINE_MEMORY_CC,
- **      #CS_RECOMPUTE_BASELINE_APP_CC
+ **
  */
 #define CS_RECOMPUTE_BASELINE_TABLE_CC          31
 
@@ -1406,26 +1373,17 @@
  **       This command may fail for the following reason(s):
  **       - Command packet length not as expected
  **       - The command specified app name is invalid
- **       - A child task (recompute baseline or one shot ) is 
- **         already running, precluding starting another. Only one child
- **         task is allowed to run at any given time.
- **       - The child task failed to be created by Executive Services (ES)
+ **       - The creation of the child task failed
  ** 
  **  \par Evidence of failure may be found in the following telemetry: 
  **       - \b \c \CS_CMDEC - command error counter will increment
  **       - Error specific event message #CS_LEN_ERR_EID
  **       - Error specific event message #CS_RECOMPUTE_UNKNOWN_NAME_APP_ERR_EID
  **       - Error specific event message #CS_RECOMPUTE_APP_CREATE_CHDTASK_ERR_EID
- **       - Error specific event message #CS_RECOMPUTE_APP_CHDTASK_ERR_EID
  **
  **  \par Criticality
  **       None
- **  \sa #CS_ONESHOT_CC,
- **      #CS_RECOMPUTE_BASELINE_CFECORE_CC,
- **      #CS_RECOMPUTE_BASELINE_OS_CC,
- **      #CS_RECOMPUTE_BASELINE_EEPROM_CC,
- **      #CS_RECOMPUTE_BASELINE_MEMORY_CC,
- **      #CS_RECOMPUTE_BASELINE_TABLE_CC
+ **
  */
 #define CS_RECOMPUTE_BASELINE_APP_CC            37
 

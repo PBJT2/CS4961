@@ -36,7 +36,7 @@ def mng_app_dev(screen, cmd)
       Cosmos.run_process("ruby lib/OskTxtFileViewer -f '#{Osk::CFS_CMAKE_DIR}/#{Osk::CPU1_STARTUP_FILE}'")
    elsif (cmd == "BUILD_CFS")
       #spawn("xfce4-terminal --default-working-directory=""#{Osk::OSK_CFS_DIR}"" --execute make install""")
-      spawn("xfce4-terminal --title=""Build cFS"" --hold --default-working-directory=""#{Osk::OSK_CFS_DIR}"" --execute ./cmake.sh""")
+      spawn("xfce4-terminal --default-working-directory=""#{Osk::OSK_CFS_DIR}"" --execute ./cmake.sh""")
    elsif (cmd == "STOP_CFS_SERVER")
    
       Osk::System.stop_cfs
@@ -146,9 +146,9 @@ def build_create_app_screen
    LABEL \"  \"
    NAMED_WIDGET Line1  LABEL \"  1. Select a template from the drop down menu. Click <Template Info> to get a description of the template.\"  
    SETTING TEXTCOLOR 0 0 153
-   NAMED_WIDGET Line2  LABEL \"  2. Modify the cFS and COSMOS target directories below. Not necessary with default OSK configuration.\"
+   NAMED_WIDGET Line2  LABEL \"  2. Modify the cFS and COSMOS target directories below if necessary\"
    SETTING TEXTCOLOR 0 0 153
-   NAMED_WIDGET Line3  LABEL \"  3. Click <Create App> to generate the code.\"
+   NAMED_WIDGET Line3  LABEL \"  3. Click <Create App> to generate the code\"
    SETTING TEXTCOLOR 0 0 153
    LABEL \"  \"
   

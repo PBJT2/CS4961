@@ -1,18 +1,40 @@
 /************************************************************************
  ** File:
- **   $Id: cs_app_cmds.c 1.8 2017/03/29 17:28:59EDT mdeschu Exp  $
+ **   $Id: cs_app_cmds.c 1.8.1.1 2015/03/03 11:58:50EST sstrege Exp  $
  **
- **   Copyright (c) 2007-2014 United States Government as represented by the 
+ **   Copyright © 2007-2014 United States Government as represented by the 
  **   Administrator of the National Aeronautics and Space Administration. 
  **   All Other Rights Reserved.  
  **
  **   This software was created at NASA's Goddard Space Flight Center.
  **   This software is governed by the NASA Open Source Agreement and may be 
  **   used, distributed and modified only pursuant to the terms of that 
- **   agreement.
+ **   agreement. 
  **
  ** Purpose: 
  **   The CFS Checksum (CS) Application's commands for checking App
+ **
+ **   $Log: cs_app_cmds.c  $
+ **   Revision 1.8.1.1 2015/03/03 11:58:50EST sstrege 
+ **   Added copyright information
+ **   Revision 1.8 2015/01/26 15:06:44EST lwalling 
+ **   Recompute baseline checksum after CS tables are modified
+ **   Revision 1.7 2011/09/06 14:47:24EDT jmdagost 
+ **   Corrected recompute event message text.
+ **   Revision 1.6 2010/03/29 16:57:35EDT jmdagost 
+ **   Modified enable/disable commands to update the definitions table as well as the results table.
+ **   Revision 1.5 2008/08/01 13:28:34EDT njyanchik 
+ **   Using Table name length instead of app name length
+ **   Revision 1.4 2008/07/30 17:19:29BST njyanchik 
+ **   Fixed more naming issues in apps
+ **   Revision 1.3 2008/07/28 19:05:29BST njyanchik 
+ **   Fix some errors with the version number update
+ **   Revision 1.2 2008/07/28 16:56:07BST njyanchik 
+ **   Fixed app/table naming issues in event messages
+ **   Revision 1.1 2008/07/23 15:27:03BST njyanchik 
+ **   Initial revision
+ **   Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cs/fsw/src/project.pj
+ **
  ** 
  *************************************************************************/
 
@@ -49,10 +71,6 @@ void CS_DisableAppCmd(CFE_SB_MsgPtr_t MessagePtr)
         CS_AppData.AppCSState = CS_STATE_DISABLED;
         CS_ZeroAppTempValues();
         
-#if (CS_PRESERVE_STATES_ON_PROCESSOR_RESET == TRUE)
-        CS_UpdateCDS();
-#endif
-        
         CFE_EVS_SendEvent (CS_DISABLE_APP_INF_EID,
                            CFE_EVS_INFORMATION,
                            "Checksumming of App is Disabled");
@@ -75,10 +93,6 @@ void CS_EnableAppCmd(CFE_SB_MsgPtr_t MessagePtr)
     if ( CS_VerifyCmdLength (MessagePtr,ExpectedLength) )
     {
         CS_AppData.AppCSState = CS_STATE_ENABLED;
-        
-#if (CS_PRESERVE_STATES_ON_PROCESSOR_RESET == TRUE)
-        CS_UpdateCDS();
-#endif
         
         CFE_EVS_SendEvent (CS_ENABLE_APP_INF_EID,
                            CFE_EVS_INFORMATION,
@@ -117,7 +131,7 @@ void CS_ReportBaselineAppCmd(CFE_SB_MsgPtr_t MessagePtr)
                                    CFE_EVS_INFORMATION,
                                    "Report baseline of app %s is 0x%08X", 
                                    CmdPtr -> Name,
-                                   (unsigned int)Baseline);
+                                   Baseline);
             }
             else
             {
@@ -161,7 +175,7 @@ void CS_RecomputeBaselineAppCmd (CFE_SB_MsgPtr_t MessagePtr)
     {
         CmdPtr = (CS_AppNameCmd_t *) MessagePtr;
         
-        if (CS_AppData.RecomputeInProgress == FALSE && CS_AppData.OneShotInProgress == FALSE)
+        if (CS_AppData.ChildTaskInUse == FALSE)
         {
             
             /* make sure the entry is a valid number and is defined in the table */
@@ -171,7 +185,8 @@ void CS_RecomputeBaselineAppCmd (CFE_SB_MsgPtr_t MessagePtr)
             if (CS_GetAppResTblEntryByName(&ResultsEntry, CmdPtr -> Name))
             {
                 /* There is no child task running right now, we can use it*/
-                CS_AppData.RecomputeInProgress           = TRUE;
+                CS_AppData.ChildTaskInUse                = TRUE;
+                CS_AppData.OneShotTaskInUse              = FALSE;
                 
                 /* fill in child task variables */
                 CS_AppData.ChildTaskTable                = CS_APP_TABLE;
@@ -200,9 +215,9 @@ void CS_RecomputeBaselineAppCmd (CFE_SB_MsgPtr_t MessagePtr)
                                        CFE_EVS_ERROR,
                                        "Recompute baseline of app %s failed, CFE_ES_CreateChildTask returned: 0x%08X",
                                        CmdPtr -> Name,
-                                       (unsigned int)Status);
+                                       Status);
                     CS_AppData.CmdErrCounter++;
-                    CS_AppData.RecomputeInProgress = FALSE;
+                    CS_AppData.ChildTaskInUse = FALSE;
                 }
             }
             else
@@ -219,7 +234,7 @@ void CS_RecomputeBaselineAppCmd (CFE_SB_MsgPtr_t MessagePtr)
             /*send event that we can't start another task right now */
             CFE_EVS_SendEvent (CS_RECOMPUTE_APP_CHDTASK_ERR_EID,
                                CFE_EVS_ERROR,
-                                "App recompute baseline for app %s failed: child task in use",
+                                "App recompute baseline for app %s failed: a child task is in use",
                                CmdPtr -> Name);
             CS_AppData.CmdErrCounter++;
         }

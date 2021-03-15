@@ -79,7 +79,6 @@ typedef struct {
    JSONTBL_LoadTblEntry LoadTblEntryFunc; 
 
    JSON_Class Json;
-   JSON_Obj   JsonObj;
    char       JsonFileBuf[JSON_MAX_FILE_CHAR];   
    jsmntok_t  JsonFileTokens[JSON_MAX_FILE_TOKENS];
 

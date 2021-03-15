@@ -2,7 +2,7 @@
 ** File:
 **   $Id: mm_app.c 1.3 2016/10/30 00:48:50EDT mdeschu Exp  $
 **
-**   Copyright © 2007-2014 United States Government as represented by the 
+**   Copyright Â© 2007-2014 United States Government as represented by the 
 **   Administrator of the National Aeronautics and Space Administration. 
 **   All Other Rights Reserved.  
 **
@@ -71,6 +71,7 @@
 #include "mm_verify.h"
 #include "mm_version.h"
 #include "mm_platform_cfg.h"
+#include "mm_sbei.h"
 #include <string.h>
 
 /************************************************************************
@@ -348,6 +349,10 @@ void MM_AppPipe(CFE_SB_MsgPtr_t msg)
             case MM_DISABLE_EEPROM_WRITE_CC:
                MM_EepromWriteDisCmd(msg);
                break; 
+
+            case MM_SBEI_INJECT_CC:
+               MM_SBEI_InjectCmd(msg);
+               break;
                
             default:
                MM_AppData.ErrCounter++;
@@ -372,7 +377,7 @@ void MM_AppPipe(CFE_SB_MsgPtr_t msg)
    return;
 
 } /* End MM_AppPipe */
-
+   
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
 /* Housekeeping request                                            */

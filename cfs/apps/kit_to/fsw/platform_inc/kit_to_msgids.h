@@ -1,6 +1,5 @@
 /*
-** Purpose: Define platform configurations for the OpenSatKit Telemetry Output
-**          application
+** Purpose: Define platform configurations for the OpenSat Kit Telemetry Output application
 **
 ** Notes:
 **   None
@@ -22,15 +21,14 @@
 ** Command Message IDs
 */
 
-#define  KIT_TO_CMD_MID      (0x1F20)
-#define  KIT_TO_SEND_HK_MID  (0x1F21)
+#define  KIT_TO_CMD_MID      (0x1880)
+#define  KIT_TO_SEND_HK_MID  (0x1881)
 
 /*
 ** Telemetry Message IDs
 */
 
-#define  KIT_TO_HK_TLM_MID        (0x0F20)
-#define  KIT_TO_PKT_TBL_TLM_MID   (0x0F21)
-#define  KIT_TO_DATA_TYPE_TLM_MID (0x0F22)
+#define  KIT_TO_HK_TLM_MID        (0x0880)
+#define  KIT_TO_DATA_TYPE_TLM_MID (0x0881)
 
 #endif /*_kit_to_msgids_*/

@@ -1,22 +1,5 @@
 { "app": {
    
-   "title": "OSK Telemetry Output",
-   "version": "2.0.0",
-   "owner": "OpenSatkit",
-   "url": "https://github.com/OpenSatKit/OpenSatKit",
-
-   "description": [
-      "KIT_TO reads messages from the software bus and sends them to COSMOS using",
-      "UDP. This serves teh same role as NASA/Goddard's TO_LAB app except",
-      "it has a JSON packet definition table that defines which packets should",
-      "be sent to COSMOS and how often using a packet filtering scheme."
-   ],
-
-   "system": {
-      "build": true,
-      "simsat": true
-   },
-   
    "cosmos": {
       "target": "KIT_TO"
    },
@@ -35,7 +18,7 @@
          { 
                 "name": "Packet Table",
                   "id": 0,
-            "filename": "osk_to_pkt_tbl.json"
+            "filename": "kit_to_pkt_tbl.json"
          }
       ],
       "cmd-mid": "KIT_TO_CMD_MID"
