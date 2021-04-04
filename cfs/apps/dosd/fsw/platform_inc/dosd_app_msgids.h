@@ -24,6 +24,6 @@
 ** Telemetry Message IDs
 */
 
-#define  DOSD_HK_TLM_MID     0x1F4A //0x0FF0
+#define  DOSD_HK_TLM_MID     0x1F4C //was 0x0FF0
 
 #endif /* _dosd_app_msgids_h_ */

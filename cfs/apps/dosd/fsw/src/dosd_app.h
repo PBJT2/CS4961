@@ -16,6 +16,7 @@
 
 #include "cfe.h"
 #include "dosd_tbldefs.h"
+#include "dosd_version.h"
 
 
 /*
@@ -101,11 +102,13 @@ typedef struct
 /*************************************************************************/
 
 /*
-** Type definition (generic "no arguments" command)
+** Type definition (generic "detection" command)
 */
 typedef struct
 {
   uint8                 CmdHeader[CFE_SB_CMD_HDR_SIZE];
+
+  uint16  		ConnectionState;                        //to disconnect or stay connected with TFTP
 
 } DOSD_DetectCmd_t;
 
@@ -172,6 +175,8 @@ typedef struct
 
   CFE_EVS_BinFilter_t   EventFilters[DOSD_EVT_COUNT];
   CFE_TBL_Handle_t      TblHandles[DOSD_NUM_TABLES];
+
+  uint8   ConnectionState;                     /**< \TFTP enable/disable state */
 
 } DOSD_AppData_t;
 

@@ -408,7 +408,6 @@ void DOSI_HousekeepingCmd(CFE_SB_MsgPtr_t msg)
 {
     uint16 ExpectedLength = sizeof(DOSI_NoArgsCmd_t);
     uint16 i;
-
     /*
     ** Verify command packet length
     */

@@ -25,6 +25,6 @@
 ** Telemetry Message IDs
 */
 
-#define  DOSI_HK_TLM_MID     0x1F54
+#define  DOSI_HK_TLM_MID     0x1F56
 
 #endif /* _dosi_app_msgids_h_ */

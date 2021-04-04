@@ -16,6 +16,7 @@
 
 #include "cfe.h"
 #include "dosi_tbldefs.h"
+#include "dosi_version.h"
 
 
 /*

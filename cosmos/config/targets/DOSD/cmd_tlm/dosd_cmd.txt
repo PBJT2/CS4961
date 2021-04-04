@@ -1,5 +1,6 @@
 <% 
   require 'osk_config' 
+  require 'osk_global'
 
   @APP_PREFIX_STR = "DOSD"
   @CMD_MID_STR    = "DOSD_CMD_MID"  # Replace with your app's MID defined in fsw_msg_id.rb
@@ -16,4 +17,7 @@ COMMAND DOSD ROUTINE_PROC <%= Osk::Cfg.processor_endian %> "Routine processing"
   <%= Osk::Cfg.cmd_hdr(@APP_PREFIX_STR, @CMD_MID_STR, 2, 0) %>
 
 COMMAND DOSD DETECT <%= Osk::Cfg.processor_endian %> "Detect flooding attack"
-  <%= Osk::Cfg.cmd_hdr(@APP_PREFIX_STR, @CMD_MID_STR, 3, 0) %>
+  <%= Osk::Cfg.cmd_hdr(@APP_PREFIX_STR, @CMD_MID_STR, 3, 2) %>
+  APPEND_PARAMETER APP_STATE 16 UINT MIN_UINT16 MAX_UINT16 0 "0=Disconnect TFTP, 1=Remain connected"
+
+
