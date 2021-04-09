@@ -1,5 +1,5 @@
 USER_MODIFIED
-"lib/fsw_msg_id.rb" 0x277F79BB
+"lib/fsw_msg_id.rb" 0x7B3ADA31
 "lib/osk_flight.rb" 0x7EAC1322
 "lib/cfdp/cfdp.rb" 0x14C9A1BA
 "lib/cfdp/unit_test/test_cfdp_header.rb" 0x12A86579
@@ -185,15 +185,15 @@ USER_MODIFIED
 "config/targets/CFS_KIT/screens/perf_mon_demo_screen.txt" 0x6799BBD3
 "config/targets/CFS_KIT/screens/cfs_kit_screen.txt" 0xB52CEB81
 "config/targets/CFS_KIT/screens/heater_ctrl_demo_screen.txt" 0x26EBAC7D
-"config/targets/CFS_KIT/screens/json_table_mgmt_scr.txt" 0xCEC9013D
+"config/targets/CFS_KIT/screens/json_table_mgmt_scr.txt" 0xAA2894A3
 "config/targets/CFS_KIT/screens/mng_app_runtime_screen.txt" 0xBECBDD75
 "config/targets/CFS_KIT/screens/sim_42_screen.txt" 0x3004D14E
 "config/targets/CFS_KIT/screens/tutorial_scr.txt" 0x1D5059C0
 "config/targets/CFS_KIT/screens/memory_mgmt_demo_info_screen.txt" 0x73C572DD
-"config/targets/CFS_KIT/screens/about_scr.txt" 0xA81FE1DF
+"config/targets/CFS_KIT/screens/about_scr.txt" 0x150954C0
 "config/targets/CFS_KIT/screens/memory_mgmt_screen.txt" 0x6BBFF608
 "config/targets/CFS_KIT/screens/cmd_screen.txt" 0x1C46A1EC
-"config/targets/CFS_KIT/screens/osk_tmp_flt_cmd_scr.txt" 0xA78FC89C
+"config/targets/CFS_KIT/screens/osk_tmp_flt_cmd_scr.txt" 0x27F78193
 "config/targets/CFS_KIT/screens/cfe_screen.txt" 0x5248AB9B
 "config/targets/CFS_KIT/screens/recorder_mgmt_demo_info_screen.txt" 0xAC796701
 "config/targets/CFS_KIT/screens/benchmark_screen.txt" 0x614E9AE8
@@ -298,7 +298,7 @@ USER_MODIFIED
 "config/targets/HSIM/procedures/hsim_intg_test.rb" 0xCEF5962F
 "config/targets/SBEI/table_manager/sbei_tbl_2.txt" 0x8710353E
 "config/targets/SBEI/table_manager/sbei_tbl_1.txt" 0xBCEC251E
-"config/targets/SBEI/cmd_tlm/sbei_cmd.txt" 0x777C4806
+"config/targets/SBEI/cmd_tlm/sbei_cmd.txt" 0x7757CB1A
 "config/targets/SBEI/cmd_tlm/sbei_tlm.txt" 0xEEB75463
 "config/targets/CF/osk/cf.json" 0xE3491906
 "config/targets/CF/cmd_tlm/cf_tlm.txt" 0x6D25754C

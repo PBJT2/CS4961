@@ -17,75 +17,41 @@ extern MM_AppData_t MM_AppData;
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* SBEI_INJECT command                                             */
+/* SBEI_INJECT command (Currently: Will + 5 the initial read value)*/
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 void MM_SBEI_InjectCmd(CFE_SB_MsgPtr_t msg)
-{
-   //Note: Can only access one function at a time or the system crashes
+{  
 
-   //Peek
-   MM_PeekCmd_t    *PeekPtr;
-   PeekPtr = ((MM_PeekCmd_t *)msg);
-   // MM_SBEI_Peek(PeekPtr);
+   //Initialize all necessary variables
+   uint8 ByteValue = 0;
+   uint32 DestAddress;
+   CFS_SymAddr_t     DestSymAddress;
+
+   //String of the Dummy Application
+   char address[] = "SBEI_AppData";
+
+   //Copy the address and resolve it 
+   strcpy(DestSymAddress.SymName, address);
+   CFS_ResolveSymAddr(&DestSymAddress, &DestAddress);
+
+   //Read the value of the SBEI_AppData
+   CFE_PSP_MemRead8(DestAddress, &ByteValue);
+
+   //Print out Value found in SBEI_AppData
+   CFE_EVS_SendEvent(MM_POKE_BYTE_INF_EID, CFE_EVS_INFORMATION,
+                     "Address: %X | Value: %X", DestAddress, ByteValue);
 
 
-   //Poke
-   MM_PokeCmd_t *PokePtr;
-   PokePtr = ((MM_PokeCmd_t *)msg);
-   MM_SBEI_Poke(PokePtr);
+   //Add 5 to the current read value
+   ByteValue = ByteValue + 5;
+
+   //Write the value into the SBEI_AppData
+   CFE_PSP_MemWrite8(DestAddress, ByteValue);
 
    return;
 
 } /* end MM_SBEI_InjectCmd */
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Executes Memory Peek on SBEI_AppData for 8 bits of memory       */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-void MM_SBEI_Peek(MM_PeekCmd_t *PeekPtr){
-   uint32 DestAddress;
-   char adress[] = "SBEI_AppData";
-
-   //Takes inputted address and resolves it
-   strcpy(PeekPtr->SrcSymAddress.SymName, adress);
-   CFS_ResolveSymAddr(&(PeekPtr->SrcSymAddress), &DestAddress);
-
-   //Data Sizze of 8 Bits
-   PeekPtr->DataSize = 8;
-   MM_PeekMem(PeekPtr, DestAddress);
-
-   return;
-} /* end MM_SBEI_Peek */
-
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                                           */
-/* Executes Memory Poke on SBEI_AppData for 8 bits of memory. Inputs random data value       */
-/*                                                                                           */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-void MM_SBEI_Poke(MM_PokeCmd_t *PokePtr){
-   uint32 DestAddress;
-   char adress[] = "SBEI_AppData";
-
-   //Random function
-   time_t t;
-   srand((unsigned) time(&t));
-
-   //Takes inputted address and resolves it
-   strcpy(PokePtr->DestSymAddress.SymName, adress);
-   CFS_ResolveSymAddr(&(PokePtr->DestSymAddress), &DestAddress);
-
-   //Data Value being inputted
-   PokePtr->Data = rand();
-
-   //Data Size of 8 Bits
-   PokePtr->DataSize = 8;
-   MM_PokeMem(PokePtr, DestAddress);
-
-   return;
-} /*end MM_SBEI_Peek
 
 /************************/
 /*  End of File Comment */
