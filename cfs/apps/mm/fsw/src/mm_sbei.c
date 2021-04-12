@@ -7,8 +7,9 @@
 #include "mm_utils.h"
 #include "mm_mission_cfg.h"
 #include "cfs_utils.h"
-#include <string.h>
 #include "mm_sbei.h"
+#include <string.h>
+#include <time.h>
 
 /*************************************************************************
 ** External Data
@@ -17,7 +18,7 @@ extern MM_AppData_t MM_AppData;
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* SBEI_INJECT command (Currently: Will + 5 the initial read value)*/
+/* Single Bit Error Inject Command                                 */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 void MM_SBEI_InjectCmd(CFE_SB_MsgPtr_t msg)
@@ -38,20 +39,71 @@ void MM_SBEI_InjectCmd(CFE_SB_MsgPtr_t msg)
    //Read the value of the SBEI_AppData
    CFE_PSP_MemRead8(DestAddress, &ByteValue);
 
-   //Print out Value found in SBEI_AppData
-   CFE_EVS_SendEvent(MM_POKE_BYTE_INF_EID, CFE_EVS_INFORMATION,
-                     "Address: %X | Value: %X", DestAddress, ByteValue);
-
-
-   //Add 5 to the current read value
-   ByteValue = ByteValue + 5;
-
-   //Write the value into the SBEI_AppData
-   CFE_PSP_MemWrite8(DestAddress, ByteValue);
+   MM_SBEI_Flip(ByteValue, DestAddress);
 
    return;
 
 } /* end MM_SBEI_InjectCmd */
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Flips a random bit in the SBEI_AppData                          */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void MM_SBEI_Flip(uint8 ByteValue, uint32 DestAddress){
+   //Initialize flip variable   
+   uint8 flip = 0;
+
+   //Initialize the rand()
+   srand(time(0));
+
+   //Switch statement for which bit 1-8 to flip
+   switch(rand() % 8){
+      case 0:
+         flip = 1;
+         ByteValue ^= flip;
+         break;
+      case 1:
+         flip = 2;
+         ByteValue ^= flip;
+         break;      
+      case 2:
+         flip = 4;
+         ByteValue ^= flip;
+         break;
+      case 3:
+         flip = 8;
+         ByteValue ^= flip;
+         break;
+      case 4:
+         flip = 16;
+         ByteValue ^= flip;
+         break;
+      case 5:
+         flip = 32;
+         ByteValue ^= flip;
+         break;
+      case 6: 
+         flip = 64;
+         ByteValue ^= flip;
+         break;
+      default :
+         flip = 128;
+         ByteValue ^= flip;
+
+   }
+
+   //Write the value into the SBEI_AppData
+   CFE_PSP_MemWrite8(DestAddress, ByteValue);
+
+   //Print out Value found in SBEI_AppData
+   CFE_EVS_SendEvent(MM_SBEI_EID, CFE_EVS_INFORMATION,
+                     "Bit Flip: %X", ByteValue);
+
+   return;
+   
+} /* end MM_SBEI_Convert */
 
 /************************/
 /*  End of File Comment */

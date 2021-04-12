@@ -185,7 +185,7 @@ USER_MODIFIED
 "config/targets/CFS_KIT/screens/perf_mon_demo_screen.txt" 0x6799BBD3
 "config/targets/CFS_KIT/screens/cfs_kit_screen.txt" 0xB52CEB81
 "config/targets/CFS_KIT/screens/heater_ctrl_demo_screen.txt" 0x26EBAC7D
-"config/targets/CFS_KIT/screens/json_table_mgmt_scr.txt" 0xAA2894A3
+"config/targets/CFS_KIT/screens/json_table_mgmt_scr.txt" 0x3014DF22
 "config/targets/CFS_KIT/screens/mng_app_runtime_screen.txt" 0xBECBDD75
 "config/targets/CFS_KIT/screens/sim_42_screen.txt" 0x3004D14E
 "config/targets/CFS_KIT/screens/tutorial_scr.txt" 0x1D5059C0

@@ -10,6 +10,7 @@
 #include "mm_filedefs.h"
 
 void MM_SBEI_InjectCmd(CFE_SB_MsgPtr_t MessagePtr);
+void MM_SBEI_Flip(uint8 ByteValue, uint32 DestAddress);
 
 #endif /* _mm_sbei_ */
 
