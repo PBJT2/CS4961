@@ -83,6 +83,11 @@ primary header that must be big endian:
   <!-- SC_1HZ_WAKEUP_MID 0x18AB(6315) => 0xAB18(43800), 0xC000(48152) => 0x00C0(192), 0x0001 => 0x0100(256) -->
   <entry  id="22"  stream-id="43800" seq-seg="192" length="256" />
 
+  <!-- DOSD_SEND_HK_MID 0x1F4B(8011) => 0xAC18(44056), 0xC000(49152) => 0x00C0(192), 0x0001 => 0x0100(256) -->
+  <entry  id="23"  stream-id="44056" seq-seg="192" length="256" />
+
+
+
   <!--******************-->
   <!--**** Kit Apps ****-->
   <!--******************-->
@@ -123,6 +128,12 @@ primary header that must be big endian:
   <!-- I42_SEND_HK_MID 0x19D3(6611) => 0xD319(54041), 0xC000(48152) => 0x00C0(192), 0x0001 => 0x0100(256) -->
   <entry  id="41"  stream-id="54041" seq-seg="192" length="256" />
 
+
+  <!-- DOSI_SEND_HK_MID 0x1F55(8021) => 0xAC18(44056), 0xC000(49152) => 0x00C0(192), 0x0001 => 0x0100(256) -->
+  <entry  id="48"  stream-id="44312" seq-seg="192" length="256" />
+
+  <!-- SBEI_SEND_HK_MID 0x1F5F(8031) => 0xAC18(44056), 0xC000(49152) => 0x00C0(192), 0x0001 => 0x0100(256) -->
+  <entry  id="49"  stream-id="44568" seq-seg="192" length="256" />
  
   <!--***********************-->
   <!--**** Test Messages ****-->
