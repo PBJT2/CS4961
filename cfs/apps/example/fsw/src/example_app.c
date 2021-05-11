@@ -907,11 +907,13 @@ if (EXAMPLE_VerifyCmdLength(msg, sizeof(EXAMPLE_IcsDetectCmd_t)))
 	*/
 
 	/* EXAMPLE app has 4 commands that have to be executed in the right order! */
+  /*
 	int ics_example_steps = -1;
 	ics_example_steps = ICS_EXAMPLE_Steps(charCount, arrSize, cmds2DArr);
 	
 	if (ics_example_steps == 0)
 		CFE_EVS_SendEvent(EXAMPLE_ICSDETECT_INF_EID, CFE_EVS_INFORMATION, "Invalid Command Sequence Detected: EXAMPLE Steps cmds 1 to 4 not executed in the right order.");
+  */
 
 
 
@@ -959,11 +961,11 @@ return;
 /* ********************************************************************************************* */
 /* ICS_EXAMPLE_Steps() - EXAMPLE app has 4 commands that have to be executed in the right order! */
 /* ********************************************************************************************* */
-
+/*
 int ICS_EXAMPLE_Steps(int charCount, int arrSize, char cmds2DArr[arrSize][charCount])
 {
 
-	/* Did I execute the command sequence at all? */
+	// Did I execute the command sequence at all?
 
 	char scanCmds1[charCount];
 	boolean step1Done = false;
@@ -987,7 +989,7 @@ int ICS_EXAMPLE_Steps(int charCount, int arrSize, char cmds2DArr[arrSize][charCo
 	if ( !( (step1Done) && (step2Done) && (step3Done) && (step4Done) ) )
 		return -1;
 
-	/* Create an array based on the order of the steps executed! */
+	// Create an array based on the order of the steps executed!
 
 	char stepsInputSeq[4][20];
 	int stepsInputSeqIndex = 0;
@@ -1010,7 +1012,7 @@ int ICS_EXAMPLE_Steps(int charCount, int arrSize, char cmds2DArr[arrSize][charCo
 
 	}
 
-	/* Is the array based on the order of the steps executed CORRECT?! */
+	// Is the array based on the order of the steps executed CORRECT?!
 
 	char stepsCorrectSeq[4][20] =
 	{ "EXAMPLE-STEP_ONE", "EXAMPLE-STEP_TWO", "EXAMPLE-STEP_THREE", "EXAMPLE-STEP_FOUR" };
@@ -1028,8 +1030,8 @@ int ICS_EXAMPLE_Steps(int charCount, int arrSize, char cmds2DArr[arrSize][charCo
 	else
 		return 0;
 
-} /* End of ICS_EXAMPLE_Steps() */
-
+} // End of ICS_EXAMPLE_Steps()
+*/
 
 
 /* ************************************************************************************************* */
