@@ -1,0 +1,35 @@
+{ "app": {
+   
+   "title": "Example App",
+   "version": "1.1.1",
+   "owner": "Lopez",
+   "url": "https://github.com/",
+
+   "description": [
+      "Testing a custom app!"
+   ],
+
+   "system": {
+      "build": true,
+      "simsat": true
+   },
+   
+   "cosmos": {
+      "target": "EXAMPLE"
+   },
+   
+   "fsw": {
+      "cfe-type": "CFE_APP",
+      "obj-path-file": "/cf/example.so",
+      "entry-symbol": "EXAMPLE_AppMain",
+      "name": "EXAMPLE",
+      "priority": 90,
+      "stack": 16384,
+      "load_addr": 0,
+      "exception-action": 0,
+      "app-framework": "cfs",
+      "tables": [],
+      "cmd-mid": "EXAMPLE_CMD_MID"
+   }
+   
+}}
