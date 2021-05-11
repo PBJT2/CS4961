@@ -22,9 +22,10 @@ While the cFS is running
 6) For "Command:" select "SBEI_INJECT"
 7) Click "Send"
 
-In the Terminal Window it should write out the following
-"Bit Flip: X"
-"X" being the resulting value due to bit flip.
+In the Terminal Window it should write out the following:
+"SBEI COMMAND: Bit Flipped = X Data = Y"
+"X" is the bit being flipped counting from 0-7
+"Y" is the resultant value of the flip 
 
 NOTE: The memory being flipped always starts with 0.
 
@@ -36,6 +37,6 @@ Files used to do the injection is located in the following
 .c File is located in: "../OpenSatKit-master/cfs/apps/mm/fsw/src/mm_sbei.c"
 .h File is located in :"../OpenSatKit-master/cfs/apps/mm/fsw/src/mm_sbei.h"
 
-Dummy Files (The Dummy Application)
+The Dummy Application Folder (SBEI)
 Files for the dummy application is located in the following:
 "../OpenSatKit-master/cfs/apps/sbei/fsw/src"

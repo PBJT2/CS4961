@@ -1,11 +1,17 @@
+/*************************************************************************
+** File:
+**   $Id: mm_sbei.c
+**
+** Purpose: 
+**   Functions used to inject the Single Bit Error Anomaly
+**
+*************************************************************************/
+
+/*************************************************************************
+** Includes
+*************************************************************************/
 #include "mm_app.h"
-#include "mm_dump.h"
 #include "mm_events.h"
-#include "mm_mem32.h"
-#include "mm_mem16.h"
-#include "mm_mem8.h"
-#include "mm_utils.h"
-#include "mm_mission_cfg.h"
 #include "cfs_utils.h"
 #include "mm_sbei.h"
 #include <string.h>
@@ -55,43 +61,54 @@ void MM_SBEI_Flip(uint8 ByteValue, uint32 DestAddress){
    //Initialize flip variable   
    uint8 flip = 0;
 
+   //Variable showing which bit is flipped
+   int bit = 0;
+
    //Initialize the rand()
    srand(time(0));
+
 
    //Switch statement for which bit 1-8 to flip
    switch(rand() % 8){
       case 0:
          flip = 1;
          ByteValue ^= flip;
+         bit = 0;
          break;
       case 1:
          flip = 2;
          ByteValue ^= flip;
+         bit = 1;
          break;      
       case 2:
          flip = 4;
          ByteValue ^= flip;
+         bit = 2;
          break;
       case 3:
          flip = 8;
          ByteValue ^= flip;
+         bit = 3;
          break;
       case 4:
          flip = 16;
          ByteValue ^= flip;
+         bit = 4;
          break;
       case 5:
          flip = 32;
          ByteValue ^= flip;
+         bit = 5;
          break;
       case 6: 
          flip = 64;
          ByteValue ^= flip;
+         bit = 6;
          break;
       default :
          flip = 128;
          ByteValue ^= flip;
-
+         bit = 7;
    }
 
    //Write the value into the SBEI_AppData
@@ -99,7 +116,7 @@ void MM_SBEI_Flip(uint8 ByteValue, uint32 DestAddress){
 
    //Print out Value found in SBEI_AppData
    CFE_EVS_SendEvent(MM_SBEI_EID, CFE_EVS_INFORMATION,
-                     "Bit Flip: %X", ByteValue);
+                     "SBEI COMMAND: Bit Flipped = %d Data = %X", bit,  ByteValue);
 
    return;
    
