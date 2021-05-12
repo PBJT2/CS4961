@@ -19,8 +19,7 @@ CFE_APP, /cf/isim.so,         ISIM_AppMain,        ISIM,          90,   16384, 0
 CFE_APP, /cf/kit_sch.so,      KIT_SCH_AppMain,     KIT_SCH,       10,   32768, 0x0, 0;
 CFE_APP, /cf/f42.so,          F42_AppMain,         F42,           50,   16384, 0x0, 0;
 CFE_APP, /cf/i42.so,          I42_AppMain,         I42,           50,   80192, 0x0, 0;
-CFE_APP, /cf/dosd.so,     DOSD_AppMain,  DOSD,       90,   16384, 0x0, 0;
-CFE_APP, /cf/dosi.so,     DOSI_AppMain,  DOSI,       90,   16384, 0x0, 0;
+CFE_APP, /cf/example.so,      EXAMPLE_AppMain,     EXAMPLE,       90,   16384, 0x0, 0;
 
 !
 ! Release Version
