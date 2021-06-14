@@ -44,6 +44,12 @@
   <slot id="1" entry="6" enable="true" frequency="5" offset="2" msg_id="16" />
   <slot id="1" entry="7" enable="true" frequency="1" offset="2" msg_id="17" />
 
+  <!-- DOSD -->
+  <slot id="1" entry="8" enable="true" frequency="5" offset="0" msg_id="23" />
+
+  <!-- DOSI  -->
+  <slot id="1" entry="9" enable="true" frequency="5" offset="0" msg_id="48" />
+
   <!--*****************-->
   <!-- Slot 2 cFS Apps -->
   <!--*****************-->
@@ -58,6 +64,9 @@
   <!-- SC -->
   <slot id="2" entry="3" enable="true" frequency="5" offset="1" msg_id="21" />
   <slot id="2" entry="4" enable="true" frequency="1" offset="1" msg_id="22" />
+
+  <!-- SBEI  -->
+  <slot id="2" entry="5" enable="true" frequency="5" offset="0" msg_id="49" />
 
   <!--*****************-->
   <!-- Slot 3 Kit Apps -->

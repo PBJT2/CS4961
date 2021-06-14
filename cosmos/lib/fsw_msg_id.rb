@@ -149,11 +149,24 @@ module Fsw
       SC_1HZ_WAKEUP_MID       = "0x18AB"
       SC_HK_TLM_MID           = "0x08AA"
 
-      #Single Bit Error Inject Command
+
+      # Denial of Service Detect Command
+
+      DOSD_CMD_MID            = "0x1F4A" #8010
+      DOSD_SEND_HK_MID        = "0x1F4B" #8011
+      DOSD_HK_TLM_MID         = "0x1F4C" #8012
+
+      # Denial of Service Inject Command
+
+      DOSI_CMD_MID            = "0x1F54" #8020
+      DOSI_SEND_HK_MID        = "0x1F55" #8021
+      DOSI_HK_TLM_MID         = "0x1F56" #8022
+
+      # Single Bit Error Inject Command
       
-      SBEI_CMD_MID     = "0x1528" #5416
-      SBEI_SEND_HK_MID = "0x1529" #5417
-      SBEI_HK_TLM_MID  = "0x1528" 
+      SBEI_CMD_MID            = "0x1F5E" #8030
+      SBEI_SEND_HK_MID        = "0x1F5F" #8031
+      SBEI_HK_TLM_MID         = "0x1F60" #8032
 
   
       #########################
@@ -167,12 +180,22 @@ module Fsw
 
       # F42 - 42 Simulator FSW
   
-      F42_CMD_MID      = "0x19D0"
-      F42_HK_TLM_MID   = "0x09D0"
-      F42_CONTROL_MID  = "0x09D1"
-      F42_SENSOR_MID   = "0x09E0"
-      F42_ACTUATOR_MID = "0x09E1"
-  
+
+      F42_CMD_MID            = "0x19D0"
+      F42_HK_TLM_MID         = "0x09D0"
+      F42_CTRL_TLM_MID       = "0x09D1"
+      F42_CTRL_GAINS_TLM_MID = "0x09D2"
+      
+      # File Manager
+
+      FILEMGR_CMD_MID            = "0x198C"
+      FILEMGR_HK_TLM_MID         = "0x098A"
+      FILEMGR_FILE_INFO_TLM_MID  = "0x098B"
+      FILEMGR_DIR_LIST_TLM_MID   = "0x098C"
+      FILEMGR_OPEN_FILES_TLM_MID = "0x098D"
+      FILEMGR_FILESYS_TLM_MID    = "0x098E"
+
+
       # Heater Control
   
       HC_CMD_MID    = "0x19A5"
@@ -232,9 +255,10 @@ module Fsw
 
       # Trivial File Transfer Protocol
   
-      TFTP_CMD_MID    = "0x1900"
-      TFTP_HK_TLM_MID = "0x0900" 
-  
+      TFTP_CMD_MID          = "0x1900"
+      TFTP_HK_TLM_MID       = "0x0900" 
+      TFTP_TRANSFER_REQ_MID = "0x0901" 
+        
       ###############
       ## PiSat Kit ##
       ###############

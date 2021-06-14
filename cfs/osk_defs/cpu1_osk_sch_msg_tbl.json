@@ -183,10 +183,10 @@
       }},
 
       {"message": {
-         "name":  "HK_SEND_HK_MID",
-         "descr": "0x189B(6299), 0xC000(49152), 0x0001",
+         "name":  "DOSD_SEND_HK_MID",
+         "descr": "0x1F4B(8011), 0xC000(49152), 0x0001",
          "id": 23,
-         "stream-id": 6299,
+         "stream-id": 8011,
          "seq-seg": 49152,
          "length": 1
       }},
@@ -378,6 +378,33 @@
          "descr": "0x1F41(8001), 0xC000(49152), 0x0001",
          "id": 46,
          "stream-id": 8001,
+         "seq-seg": 49152,
+         "length": 1
+      }},
+      
+      {"message": {
+         "name":  "FILEMGR_SEND_HK_MID",
+         "descr": "0x198D(6541), 0xC000(49152), 0x0001",
+         "id": 47,
+         "stream-id": 6541,
+         "seq-seg": 49152,
+         "length": 1
+      }},
+
+      {"message": {
+         "name":  "DOSI_SEND_HK_MID",
+         "descr": "0x1F55(8021), 0xC000(49152), 0x0001",
+         "id": 48,
+         "stream-id": 8021,
+         "seq-seg": 49152,
+         "length": 1
+      }},
+
+      {"message": {
+         "name":  "SBEI_SEND_HK_MID",
+         "descr": "0x1F5F(8031), 0xC000(49152), 0x0001",
+         "id": 49,
+         "stream-id": 8031,
          "seq-seg": 49152,
          "length": 1
       }},
