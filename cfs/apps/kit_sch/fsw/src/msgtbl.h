@@ -27,12 +27,6 @@
 #include "app_cfg.h"
 #include "json.h"
 
-
-/***********************/
-/** Macro Definitions **/
-/***********************/
-
-
 /*
 ** Event Message IDs
 */
@@ -55,12 +49,14 @@
 #define  MSGTBL_OBJ_MSG    0
 #define  MSGTBL_OBJ_CNT    1
 
-#define  MSGTBL_OBJ_NAME_MSG  "message"
+#define  MSGTBL_OBJ_MSG_NAME  "message"
                                            
 
-/**********************/
-/** Type Definitions **/
-/**********************/
+/*
+** Type Definitions
+*/
+
+
 
 /******************************************************************************
 ** Message Table -  Local table copy used for table loads
@@ -115,9 +111,9 @@ typedef struct {
 } MSGTBL_Class;
 
 
-/************************/
-/** Exported Functions **/
-/************************/
+/*
+** Exported Functions
+*/
 
 /******************************************************************************
 ** Function: MSGTBL_Constructor

@@ -32,13 +32,8 @@
 ** Command Ingest Application Macros
 */
 
-/*
-** 1.0.0 - Intitial release
-** 1.1.0 - Refactored for OSK 2.2
-*/
-
 #define  KIT_CI_MAJOR_VER    1
-#define  KIT_CI_MINOR_VER    1
+#define  KIT_CI_MINOR_VER    1   /* Refactored for OSK 2.2 */
 #define  KIT_CI_LOCAL_REV    0
 
 #define CMDMGR_PIPE_DEPTH         10
@@ -59,8 +54,8 @@
 ** exceeded so it is the developer's responsibility to verify the ranges. 
 */
 
-#define KIT_CI_APP_BASE_EID  (OSK_C_FW_APP_BASE_EID +   0)
-#define UPLINK_BASE_EID      (OSK_C_FW_APP_BASE_EID + 100)
+#define KIT_CI_APP_BASE_EID  (OSK_C_FW_APP_BASE_EID +  0)
+#define UPLINK_BASE_EID      (OSK_C_FW_APP_BASE_EID + 10)
 
 /*
 ** One event ID is used for all initialization debug messages. Uncomment one of

@@ -31,14 +31,8 @@
 ** Scheduler Application Macros
 */
 
-/*
-** 1.0.0 - Initial release
-** 1.1.0 - Refactored for OSK 2.2
-** 2.0.0 - Added Sch & Msg table commands and diagnostics telemetry
-*/
-
-#define  KIT_SCH_MAJOR_VER      2
-#define  KIT_SCH_MINOR_VER      0
+#define  KIT_SCH_MAJOR_VER      1
+#define  KIT_SCH_MINOR_VER      1   /* Refactored for OSK 2.2 */
 #define  KIT_SCH_LOCAL_REV      0
 
 #define  KIT_SCH_PIPE_DEPTH       10
@@ -49,14 +43,11 @@
 ** Command Macros
 */
 
-#define KIT_SCH_LOAD_TBL_CMD_FC             (CMDMGR_APP_START_FC + 0)
-#define KIT_SCH_DUMP_TBL_CMD_FC             (CMDMGR_APP_START_FC + 1)
+#define KIT_SCH_LOAD_TBL_CMD_FC    (CMDMGR_APP_START_FC + 0)
+#define KIT_SCH_DUMP_TBL_CMD_FC    (CMDMGR_APP_START_FC + 1)
 #define SCHEDULER_CFG_SCH_TBL_ENTRY_CMD_FC  (CMDMGR_APP_START_FC + 2)
 #define SCHEDULER_LOAD_SCH_TBL_ENTRY_CMD_FC (CMDMGR_APP_START_FC + 3)
-#define SCHEDULER_SEND_SCH_TBL_ENTRY_CMD_FC (CMDMGR_APP_START_FC + 4)
-#define SCHEDULER_LOAD_MSG_TBL_ENTRY_CMD_FC (CMDMGR_APP_START_FC + 5)
-#define SCHEDULER_SEND_MSG_TBL_ENTRY_CMD_FC (CMDMGR_APP_START_FC + 6)
-#define SCHEDULER_SEND_DIAG_TLM_CMD_FC      (CMDMGR_APP_START_FC + 7)
+#define SCHEDULER_LOAD_MSG_TBL_ENTRY_CMD_FC (CMDMGR_APP_START_FC + 4)
 
 /******************************************************************************
 ** Event Macros
@@ -67,10 +58,10 @@
 **
 */
 
-#define KIT_SCH_APP_BASE_EID  (OSK_C_FW_APP_BASE_EID +   0)
-#define SCHTBL_BASE_EID       (OSK_C_FW_APP_BASE_EID + 100)
-#define MSGTBL_BASE_EID       (OSK_C_FW_APP_BASE_EID + 200)
-#define SCHEDULER_BASE_EID    (OSK_C_FW_APP_BASE_EID + 300)
+#define KIT_SCH_APP_BASE_EID  (OSK_C_FW_APP_BASE_EID +  0)
+#define SCHTBL_BASE_EID       (OSK_C_FW_APP_BASE_EID + 10)
+#define MSGTBL_BASE_EID       (OSK_C_FW_APP_BASE_EID + 20)
+#define SCHEDULER_BASE_EID    (OSK_C_FW_APP_BASE_EID + 30) /* Uses more than 10 IDs */
 
 /*
 ** One event ID is used for all initialization debug messages. Uncomment one of

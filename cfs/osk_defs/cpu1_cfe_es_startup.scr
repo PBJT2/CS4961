@@ -22,25 +22,19 @@ CFE_APP, /cf/i42.so,          I42_AppMain,         I42,           50,   80192, 0
 CFE_APP, /cf/dosd.so,     DOSD_AppMain,  DOSD,       90,   16384, 0x0, 0;
 CFE_APP, /cf/dosi.so,     DOSI_AppMain,  DOSI,       90,   16384, 0x0, 0;
 
+
 !
-! Release Version
+! KIT_TO loaded 2nd last to avoid event message pipe overflows. The local event log
+! buffer can be used to look at started up messages
 !
-! KIT_TO loaded early and has startp main loop delay that is very short so it can
-! keep up with events during startup and avoid event message overflows. The local
-! event log buffer can be used to look at started up messages
-!
-! KIT-SCH loaded near the end minimize 'no subscriber' messages and to keep the startup 
+! KIT-SCH loaded last to minimize 'no subscriber' messages and to keep the startup 
 ! less chaotic. Having scheduler send messages while some apps are initialzes causes
 ! confusion.
 !
-! F42 & I42 should be loaded last to a avoid TO pipe overflows. This was discovered by
-! trial and error and not with concrete evidence. In a flight system you would typically
-! want your  control loops operational ASAP so this would not be ideal. Also the F42 & 
-! I42 priorities are set relatively low so the 42 Simulator-to-FSW closed loop doesn't
-! hog the system. The current design has a crude throttling and rate limiting mechanism
-! for this.
+! I42 & F42 are set low so 42 Simulator-to-FSW closed looped doesn't hog the system. The
+! current design has a crude throttling and rate limiting mechanism
 !
-! Auto generated "Hello World" app examples 
+! App generation 
 !
 !CFE_APP, /cf/example.so,     EXAMPLE_AppMain,  EXAMPLE,       90,   16384, 0x0, 0;
 !CFE_LIB, /cf/sample_lib.so,  SAMPLE_LibInit,   SAMPLE_LIB,     0,       0, 0x0, 0;

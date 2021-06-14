@@ -1,20 +1,14 @@
 {
 "app": {
 
-   "title": "Heater Simulator",
-   "version": "2.0.0",
-   "owner": "OpenSatkit",
-   "url": "https://github.com/OpenSatKit/OpenSatKit",
+   "title": "Heater Sim App",
+   "version": "2.0",
 
    "description": [
-      "HSIM is a prototype heater simulation app used for testing the Heater",
-      "Control (HC) app."
-   ],
 
-   "system": {
-      "build": true,
-      "simsat": false
-   },
+      "Prototype heater simulation app used for testing the Heater",
+      "Control (HC) app."
+      ],
 
    "cosmos": {
       "target": "HSIM"

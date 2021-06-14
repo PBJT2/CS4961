@@ -21,11 +21,13 @@
 #
 ###############################################################################
 
+
 require 'osk_global'
 require 'osk_targets'
 require 'osk_system'
 require 'fsw_const'
 require 'fsw_config_param'
+
 
 module AppFuncTest
    # Shorthand and keep type integer for event verification
@@ -41,6 +43,7 @@ module AppFuncTest
    attr_reader :app
    attr_reader :gnd_test_files_dir
    
+
    attr_reader :event_app
    attr_reader :event_type
    attr_reader :event_msg
@@ -58,6 +61,7 @@ module AppFuncTest
       return @app
    
    end # app_func_test_init()
+
 
    ##############################
    ## Tests Common to all Apps ##

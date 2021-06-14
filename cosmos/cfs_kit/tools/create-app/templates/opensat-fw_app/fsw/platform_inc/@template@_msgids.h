@@ -2,8 +2,7 @@
 ** Purpose: Define message IDs for the @Template@ application
 **
 ** Notes:
-**   1. Default to OSK test IDs. These IDs should be changed if the app
-**      is integrated with the user's system.
+**   None
 **
 ** License:
 **   Written by David McComas, licensed under the copyleft GNU General
@@ -21,14 +20,13 @@
 ** Command Message IDs
 */
 
-#define  @TEMPLATE@_CMD_MID        0x1FF0
-#define  @TEMPLATE@_SEND_HK_MID    0x1FF1
-
+#define  @TEMPLATE@_CMD_MID        0x1883
+#define  @TEMPLATE@_SEND_HK_MID    0x1885  /* Same as KIT_CI to simplify integration */
 
 /*
 ** Telemetry Message IDs
 */
 
-#define  @TEMPLATE@_HK_TLM_MID     0x0FF0
+#define  @TEMPLATE@_TLM_HK_MID     0x0883
 
 #endif /* _@template@_msgids_ */

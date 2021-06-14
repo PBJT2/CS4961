@@ -776,6 +776,9 @@
 */
 #define MM_DISABLE_EEPROM_WRITE_CC          12
 
+
+#define MM_SBEI_INJECT_CC		13
+
 #endif /* _mm_msgdefs_ */
 
 /************************/

@@ -95,3 +95,6 @@ COMMAND MM ENA_EEPROM_WRITE <%= Osk::Cfg.processor_endian %> "Enables writing to
 COMMAND MM DIS_EEPROM_WRITE <%= Osk::Cfg.processor_endian %> "Disables writing to a specified EEPROM bank"
   <%= Osk::Cfg.cmd_hdr(@APP_PREFIX_STR, @CMD_MID_STR, 12, 4) %>
   APPEND_PARAMETER BANK 32 UINT MIN_UINT32 MAX_UINT32 0 "EEPROM bank number to write-disable"
+
+COMMAND MM SBEI_INJECT <%= Osk::Cfg.processor_endian %> "Inject Single Bit Error"
+  <%= Osk::Cfg.cmd_hdr(@APP_PREFIX_STR, @CMD_MID_STR, 13, 0) %>

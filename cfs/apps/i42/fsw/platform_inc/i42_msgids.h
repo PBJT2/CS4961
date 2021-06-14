@@ -16,6 +16,7 @@
 #ifndef _i42_msgids_
 #define _i42_msgids_
 
+#include "f42_msgids.h"
 
 /*
 ** Macro Definitions
@@ -23,15 +24,12 @@
 
 /* Command Message IDs */ 
 
-#define  I42_CMD_MID       (0x19E0)
-#define  I42_EXECUTE_MID   (0x19E1)
-#define  I42_SEND_HK_MID   (0x19E2)
+#define  I42_CMD_MID       (0x19D2)
+#define  I42_SEND_HK_MID   (0x19D3)
 
 /* Telemetry Message IDs */ 
 
-#define  I42_HK_TLM_MID            (0x09E0)
-#define  I42_SENSOR_DATA_MID       (0x09E1)
-#define  I42_ACTUATOR_CMD_DATA_MID (0x09E2)
+#define  I42_HK_TLM_MID    (0x09D2)
 
 #endif /*_i42_msgids_*/
 

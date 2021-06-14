@@ -87,7 +87,7 @@ void MM_PeekCmd(CFE_SB_MsgPtr_t MessagePtr)
    MM_PeekCmd_t   *CmdPtr;
    uint32         SrcAddress;
    uint16         ExpectedLength = sizeof(MM_PeekCmd_t);
-   
+
    /* Verify command packet length */
    if(MM_VerifyCmdLength(MessagePtr, ExpectedLength))
    {

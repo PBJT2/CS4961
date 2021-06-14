@@ -29,7 +29,6 @@
 #include "tblmgr.h"
 #include "json.h"
 #include "faultrep.h"
-#include "pktutil.h"
 
 #endif /* _osk_c_fw_ */
 

@@ -26,35 +26,35 @@
 #include "msgtbl.h"
 #include "scheduler.h"
 
+/*
+** Macro Definitions
+*/
 
-/***********************/
-/** Macro Definitions **/
-/***********************/
+#define KIT_SCH_APP_NOOP_EID         (KIT_SCH_APP_BASE_EID + 0)
+#define KIT_SCH_APP_INIT_EID         (KIT_SCH_APP_BASE_EID + 1)
+#define KIT_SCH_APP_EXIT_EID         (KIT_SCH_APP_BASE_EID + 2)
+#define KIT_SCH_APP_INVALID_MID_EID  (KIT_SCH_APP_BASE_EID + 3)
+#define KIT_SCH_APP_DEBUG_EID        (KIT_SCH_APP_BASE_EID + 4)
+
 
 /*
-** Events
+** Type Definitions
 */
 
-#define KIT_SCH_APP_NOOP_EID    (KIT_SCH_APP_BASE_EID + 0)
-#define KIT_SCH_APP_INIT_EID    (KIT_SCH_APP_BASE_EID + 1)
-#define KIT_SCH_APP_EXIT_EID    (KIT_SCH_APP_BASE_EID + 2)
-#define KIT_SCH_APP_MID_ERR_EID (KIT_SCH_APP_BASE_EID + 3)
-#define KIT_SCH_APP_DEBUG_EID   (KIT_SCH_APP_BASE_EID + 4)
+typedef struct
+{
 
+   CMDMGR_Class CmdMgr;
+   TBLMGR_Class TblMgr;
+   
+   SCHTBL_Class SchTbl;
+   MSGTBL_Class MsgTbl;
 
-/**********************/
-/** Type Definitions **/
-/**********************/
+   SCHEDULER_Class Scheduler;
+   
+   CFE_SB_PipeId_t CmdPipe;
 
-
-/******************************************************************************
-** Command Functions
-*/
-
-
-/******************************************************************************
-** Telemetry Packets
-*/
+} KIT_SCH_Class;
 
 typedef struct {
 
@@ -99,49 +99,40 @@ typedef struct {
    boolean UnexpectedMajorFrame;
 
 } OS_PACK KIT_SCH_HkPkt;
+
 #define KIT_SCH_HK_TLM_LEN sizeof (KIT_SCH_HkPkt)
 
-
-/******************************************************************************
-** KIT_SCH_Class
-*/
 typedef struct {
-   
-   /* 
-   ** App Framework
-   */   
-   CFE_SB_PipeId_t CmdPipe;
-   CMDMGR_Class    CmdMgr;
-   TBLMGR_Class    TblMgr;
 
-   
+   uint8    Header[CFE_SB_TLM_HDR_SIZE];
+
    /*
-   ** Telemetry Packets
+   ** SCHTBL Data
    */
-   KIT_SCH_HkPkt   HkPkt;
+   uint32  LastProcessCount;
+   uint32  TimerId;
+   uint32  TimeSemaphore;
+   uint32  ClockAccuracy;
+   uint32  WorstCaseSlotsPerMinorFrame;
+   boolean IgnoreMajorFrame;
+   uint8   SyncToMET;
+   uint8   MajorFrameSource;
+
+} OS_PACK KIT_SCH_DiagPkt;
+
+#define KIT_SCH_DIAG_TLM_LEN sizeof (KIT_SCH_DiagPkt)
 
 
-   /*
-   ** App Objects
-   */ 
-   SCHTBL_Class    SchTbl;
-   MSGTBL_Class    MsgTbl;
-   SCHEDULER_Class Scheduler;
-  
-} KIT_SCH_Class;
-
-
-/*******************/
-/** Exported Data **/
-/*******************/
+/*
+** Exported Data
+*/
 
 extern KIT_SCH_Class  KitSch;
 
 
-/************************/
-/** Exported Functions **/
-/************************/
-
+/*
+** Exported Functions
+*/
 
 /******************************************************************************
 ** Function: KIT_SCH_Main

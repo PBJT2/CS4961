@@ -79,10 +79,7 @@ def simsat_adc(screen, cmd)
    when "DEMO"
       prompt(Osk::MSG_TBD_FEATURE)
    when "TUTORIAL"
-      case screen.get_named_widget("tutorial").text
-      when "#{Osk::TXT_TRAINING_SLIDES}"
-         spawn("evince #{Osk::OSK_APPS_TRAIN_DIR}/#{Osk::TRAIN_OSK_APPS_ADC_FILE}")
-      end
+      prompt(Osk::MSG_TBD_FEATURE)
    else
       raise "Error in screen definition file. Undefined attitude determination and control screen command '#{cmd}' sent to simsat_src_cmd()"
    end
@@ -347,21 +344,9 @@ def simsat_runtime(screen, cmd)
    when "FUNC_ES_APP_MGMT"
       display("CFS_KIT APP_MGMT_SCREEN",1500,10)
    when "DEMO"
-      Osk::System.check_n_start_cfs
-      # Demo scripts manage screens & PacketViewer
-      case screen.get_named_widget("demo").text
-      when "TO Stats"
-         spawn("ruby #{Osk::COSMOS_SCR_RUNNER} demo_runtime_to_stats.rb")
-      when "SCH-TO Tables"
-         spawn("ruby #{Osk::COSMOS_SCR_RUNNER} demo_runtime_tables.rb")
-      end
+      prompt(Osk::MSG_TBD_FEATURE)
    when "TUTORIAL"
-      case screen.get_named_widget("tutorial").text
-      when "#{Osk::TXT_TRAINING_VIDEO}"
-         Cosmos.open_in_web_browser("#{Osk::YOUTUBE_TRAINING_COMMUNITY_APPS_RUNTIME}")      
-      when "#{Osk::TXT_TRAINING_SLIDES}"
-         spawn("evince #{Osk::OSK_APPS_TRAIN_DIR}/#{Osk::TRAIN_OSK_APPS_RUNTIME_FILE}")
-      end
+      prompt(Osk::MSG_TBD_FEATURE)
    else
       raise "Error in screen definition file. Undefined runtime environment screen command '#{cmd}' sent to simsat_src_cmd()"
    end

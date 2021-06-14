@@ -26,15 +26,9 @@
 #include "app_cfg.h"
 #include "json.h"
 
-/***********************/
-/** Macro Definitions **/
-/***********************/
-
-
-#define PKTTBL_MAX_APP_ID    (0x0800)  /* Maximum CCSDS v1 ApId */
-#define PKTTBL_APP_ID_MASK   (0x07FF)  /* CCSDS v1 ApId mask    */
-
-#define PKTTBL_UNUSED_MSG_ID (CFE_SB_INVALID_MSG_ID)
+/*
+** Macro Definitions
+*/
 
 /*
 ** Event Message IDs
@@ -46,25 +40,22 @@
 #define PKTTBL_LOAD_UPDATE_ERR_EID      (PKTTBL_BASE_EID + 3)
 #define PKTTBL_LOAD_OPEN_ERR_EID        (PKTTBL_BASE_EID + 4)
 #define PKTTBL_LOAD_PKT_ATTR_ERR_EID    (PKTTBL_BASE_EID + 5)
-#define PKTTBL_LOAD_UNDEF_FILTERS_EID   (PKTTBL_BASE_EID + 6)
-#define PKTTBL_DEBUG_EID                (PKTTBL_BASE_EID + 7)
+#define PKTTBL_DEBUG_EID                (PKTTBL_BASE_EID + 6)
 
 
 /*
 ** Table Structure Objects 
 */
 
-#define  PKTTBL_OBJ_PKT       0
-#define  PKTTBL_OBJ_FILTER    1
-#define  PKTTBL_OBJ_CNT       2
+#define  PKTTBL_OBJ_PKT    0
+#define  PKTTBL_OBJ_CNT    1
 
-#define  PKTTBL_OBJ_NAME_PKT     "packet"
-#define  PKTTBL_OBJ_NAME_FILTER  "filter"
+#define  PKTTBL_OBJ_PKT_NAME  "packet"
                                            
 
-/**********************/
-/** Type Definitions **/
-/**********************/
+/*
+** Type Definitions
+*/
 
 
 /******************************************************************************
@@ -78,14 +69,12 @@ typedef struct {
    CFE_SB_Qos_t     Qos;
    uint16           BufLim;
 
-   PktUtil_Filter   Filter;
-   
 } PKTTBL_Pkt;
 
 
-typedef struct {
-   
-   PKTTBL_Pkt Pkt[PKTTBL_MAX_APP_ID];
+typedef struct
+{
+   PKTTBL_Pkt Pkt[PKTTBL_MAX_PKT_CNT];
 
 } PKTTBL_Tbl;
 
@@ -108,9 +97,9 @@ typedef struct {
 
    uint8    LastLoadStatus;
    uint16   AttrErrCnt;
-   uint16   PktLoadCnt;
-   uint16   FilterLoadCnt;
-   uint16   CurAppId;   /* Most recent AppId processed by the callback function */
+   uint16   MaxObjErrCnt;
+   uint16   ObjLoadCnt;
+   uint16   PktLoadIdx;
    
    PKTTBL_Tbl Tbl;
 
@@ -126,10 +115,9 @@ typedef struct {
 } PKTTBL_Class;
 
 
-/************************/
-/** Exported Functions **/
-/************************/
-
+/*
+** Exported Functions
+*/
 
 /******************************************************************************
 ** Function: PKTTBL_Constructor
@@ -144,20 +132,6 @@ void PKTTBL_Constructor(PKTTBL_Class*       ObjPtr,
                         PKTTBL_GetTblPtr    GetTblPtrFunc,
                         PKTTBL_LoadTbl      LoadTblFunc, 
                         PKTTBL_LoadTblEntry LoadTblEntryFunc);
-
-
-/******************************************************************************
-** Function: KTTBL_SetPacketToUnused
-**
-*/
-void PKTTBL_SetPacketToUnused(PKTTBL_Pkt* PktPtr);
-
-
-/******************************************************************************
-** Function: PKTTBL_LoadUnusedPacketArray
-**
-*/
-void PKTTBL_SetTblToUnused(PKTTBL_Tbl* TblPtr);
 
 
 /******************************************************************************
